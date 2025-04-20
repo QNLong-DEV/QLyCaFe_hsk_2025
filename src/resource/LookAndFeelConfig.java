@@ -1,6 +1,10 @@
 package resource;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme;
+
 import javax.swing.UIManager;
 import javax.swing.JOptionPane;
 import java.awt.Color;
@@ -12,7 +16,7 @@ public class LookAndFeelConfig {
 	public static void applyLookAndFeel() {
 		try {
 			// Áp dụng giao diện FlatLaf
-			UIManager.setLookAndFeel(new FlatLightLaf());
+			UIManager.setLookAndFeel(new FlatArcOrangeIJTheme());
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Không thể thiết lập giao diện");

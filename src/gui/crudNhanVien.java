@@ -52,14 +52,14 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	private JButton btnSua;
 	private JPanel pnlWest;
 	txtSource txtHelper = new txtSource();
-	
+
 	public crudNhanVien() {
 		this.setSize(800, 600);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-		
+
 		LookAndFeelConfig.applyLookAndFeel();
-		
+
 		pnlNorth = new JPanel();
 		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
 		this.add(pnlNorth, BorderLayout.NORTH);
@@ -150,15 +150,18 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		btnThem = new JButton("Thêm");
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
+		Dimension btnSize = new Dimension(200, 50);
+		btnThem.setMaximumSize(btnSize); // Cài đặt kích thước tối đa
+		btnSua.setMaximumSize(btnSize);
+		btnXoa.setMaximumSize(btnSize);
 		pnlWest = new JPanel();
 		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
 		pnlWest.add(btnThem);
 		pnlWest.add(btnXoa);
 		pnlWest.add(btnSua);
+		pnlWest.setSize(new Dimension(300, getHeight()));
 		this.add(pnlWest, BorderLayout.WEST);
 	}
-
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
