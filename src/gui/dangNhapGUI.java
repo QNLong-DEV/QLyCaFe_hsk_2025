@@ -22,6 +22,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import dao.NhanVienDAO;
 import model.NhanVien;
+import resource.LookAndFeelConfig;
 import resource.txtSource;
 
 public class dangNhapGUI extends JFrame {
@@ -36,7 +37,7 @@ public class dangNhapGUI extends JFrame {
 	private loadingGUI loadingwindow;
 	private JLabel lblSdt;
 	private JTextField txtSdt;
-	txtSource txtHelper = new txtSource(); 
+	txtSource txtHelper = new txtSource();
 
 	public dangNhapGUI() {
 		setTitle("Đăng nhập");
@@ -44,27 +45,7 @@ public class dangNhapGUI extends JFrame {
 		setSize(500, 200);
 		setLocationRelativeTo(null);
 
-		// Áp dụng giao diện FlatLaf
-		try {
-			UIManager.setLookAndFeel(new FlatLightLaf());
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Không thể thiết lập giao diện");
-		}
-		UIManager.put("Panel.background", Color.decode("#F0F0F0")); // màu nền
-		UIManager.put("Label.foreground", Color.DARK_GRAY); // màu chữ
-		UIManager.put("Button.arc", 15);
-		UIManager.put("Component.arc", 15); // Áp dụng cho TextField, ComboBox, v.v.
-		UIManager.put("ProgressBar.arc", 999); // Làm progress bar tròn
-		UIManager.put("Button.hoverBackground", Color.decode("#D6EAF8"));
-		UIManager.put("Button.hoverForeground", Color.BLACK);
-		UIManager.put("TabbedPane.selectedBackground", Color.WHITE);
-		UIManager.put("TabbedPane.background", Color.decode("#FDFEFE"));
-		UIManager.put("TabbedPane.foreground", Color.decode("#2E4053"));
-		UIManager.put("TabbedPane.selectedForeground", Color.BLUE);
-		UIManager.put("Button.padding", new Insets(10, 20, 10, 20)); // top, left, bottom, right
-		UIManager.put("Component.focusWidth", 1); // Độ dày viền khi focus
-
+		LookAndFeelConfig.applyLookAndFeel();
 		lblDangNhap = new JLabel("Đăng nhập tài khoản");
 		lblDangNhap.setForeground(Color.blue);
 		lblDangNhap.setAlignmentX(CENTER_ALIGNMENT);
@@ -78,7 +59,7 @@ public class dangNhapGUI extends JFrame {
 		txtSdt = new JTextField(10);
 		txtMatKhau = new JPasswordField(10);
 		txtHelper.addPlaceholder(txtSdt, "nhập đúng định dạng: 09xxxxxxxx");
-		
+
 		Dimension txtSize = new Dimension(100, 15);
 		txtSdt.setPreferredSize(txtSize);
 		txtMatKhau.setPreferredSize(txtSize);

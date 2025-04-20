@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import resource.LookAndFeelConfig;
 import resource.txtSource;
 
 public class crudNhanVien extends JPanel implements ActionListener, FocusListener {
@@ -56,6 +57,9 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		this.setSize(800, 600);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
+		
+		LookAndFeelConfig.applyLookAndFeel();
+		
 		pnlNorth = new JPanel();
 		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
 		this.add(pnlNorth, BorderLayout.NORTH);
