@@ -21,6 +21,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import resource.txtSource;
+
 public class crudNhanVien extends JPanel implements ActionListener, FocusListener {
 
 	private JPanel pnlNorth;
@@ -48,7 +50,8 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	private JButton btnXoa;
 	private JButton btnSua;
 	private JPanel pnlWest;
-
+	txtSource txtHelper = new txtSource();
+	
 	public crudNhanVien() {
 		this.setSize(800, 600);
 		this.setVisible(true);
@@ -83,17 +86,17 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		lblMatkhau.setPreferredSize(lblSize);
 
 		txtMaNV = new JTextField(10);
-		addPlaceholder(txtMaNV, "Đúng định dạng U001");
+		txtHelper.addPlaceholder(txtMaNV, "Đúng định dạng U001");
 		txtHotenNV = new JTextField(10);
-		addPlaceholder(txtHotenNV, "Không được có số");
+		txtHelper.addPlaceholder(txtHotenNV, "Không được có số");
 		txtSdt = new JTextField(10);
-		addPlaceholder(txtSdt, "Đúng định dạng 10 số");
+		txtHelper.addPlaceholder(txtSdt, "Đúng định dạng 10 số");
 		txtNgaySinh = new JTextField(10);
-		addPlaceholder(txtNgaySinh, "Đúng định dạng dd/mm/yyyy");
+		txtHelper.addPlaceholder(txtNgaySinh, "Đúng định dạng dd/mm/yyyy");
 		txtEmail = new JTextField(10);
-		addPlaceholder(txtEmail, "Đúng định dạng user@gmail.com");
+		txtHelper.addPlaceholder(txtEmail, "Đúng định dạng user@gmail.com");
 		txtMatkhau = new JTextField(10);
-		addPlaceholder(txtMatkhau, "Đúng định dạng 1 hoa, 1 số, 1 thường");
+		txtHelper.addPlaceholder(txtMatkhau, "Đúng định dạng 1 hoa, 1 số, 1 thường");
 
 		Dimension txtSize = new Dimension(120, 25);
 		txtMaNV.setPreferredSize(txtSize);
@@ -144,33 +147,14 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
 		pnlWest = new JPanel();
+		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
 		pnlWest.add(btnThem);
 		pnlWest.add(btnXoa);
 		pnlWest.add(btnSua);
 		this.add(pnlWest, BorderLayout.WEST);
 	}
 
-	public void addPlaceholder(JTextField txt, String placeholder) {
-		txt.setText(placeholder);
-		txt.setForeground(Color.GRAY);
-		txt.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (txt.getText().equals(placeholder)) {
-					txt.setText("");
-					txt.setForeground(Color.BLACK);
-				}
-			}
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (txt.getText().isEmpty()) {
-					txt.setText(placeholder);
-					txt.setForeground(Color.GRAY);
-				}
-			}
-		});
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

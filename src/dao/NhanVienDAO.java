@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -42,5 +43,24 @@ public class NhanVienDAO {
 			connectiondb.closeConnection(con);
 		}
 		return ds;
+	}
+
+	public NhanVien getNhanVienByEmailVaMatKhau(String sdt, String matKhau) {
+		NhanVien nv = null;
+		try (Connection c = connectiondb.getConnection()) {
+			String sql = "SELECT * FROM NhanVien WHERE Sdt = ? AND matKhau = ?";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, sdt);
+			pst.setString(2, matKhau);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				nv = new NhanVien(rs.getString("MaNV"), rs.getString("TenNV"), rs.getString("Sdt"),
+						rs.getDate("Ngaysinh").toLocalDate(), rs.getString("Email"), rs.getString("matkhau"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nv;
 	}
 }

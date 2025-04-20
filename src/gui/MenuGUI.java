@@ -2,8 +2,10 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,10 +24,12 @@ public class MenuGUI extends JFrame {
 	private JPanel pnlMenu;
 	private JPanel pnlDoanhThu;
 	private crudNhanVien nhanvienGUI;
+	private Dimension screenSize;
 
 	public MenuGUI() {
 		setTitle("Quản lý quán cafe");
-		setSize(800, 600);
+		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setSize(screenSize.width,screenSize.height);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -50,7 +54,6 @@ public class MenuGUI extends JFrame {
 		UIManager.put("TabbedPane.selectedForeground", Color.BLUE);
 		UIManager.put("Button.padding", new Insets(10, 20, 10, 20)); // top, left, bottom, right
 		UIManager.put("Component.focusWidth", 1); // Độ dày viền khi focus
-
 
 		tabbedPane = new JTabbedPane();
 		JTabbedPane tabbedPane = new JTabbedPane();
