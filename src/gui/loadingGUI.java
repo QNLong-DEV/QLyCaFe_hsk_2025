@@ -14,10 +14,10 @@ public class loadingGUI extends JFrame {
 
 	public loadingGUI() {
 		setTitle("Loading...");
-		setSize(300, 200);
+		setSize(300, 300);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setUndecorated(true); // Nếu muốn ẩn các viền cửa sổ
+		setUndecorated(true); 
 
 		loadingLabel = new JLabel();
 		loadingLabel.setHorizontalAlignment(SwingConstants.CENTER);

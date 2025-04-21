@@ -1,9 +1,11 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -12,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -32,6 +35,19 @@ public class MenuNuocGUI extends JPanel {
 	private DefaultTableModel tblModel;
 	private JTable tbl;
 	private JScrollPane scrollTable;
+	private JPanel pnlGridmenu;
+	private JButton btnEx1;
+	private JButton btnEx2;
+	private JButton btnEx3;
+	private JButton btnEx4;
+	private JButton btnEx5;
+	private JButton btnEx6;
+	private JButton btnEx7;
+	private JButton btnEx8;
+	private JButton btnEx9;
+	private JButton btnEx10;
+	private Component pnlGridMenu;
+	private JScrollPane scrollPane;
 
 	public MenuNuocGUI() {
 		setLayout(new BorderLayout());
@@ -49,17 +65,40 @@ public class MenuNuocGUI extends JPanel {
 		btnHuy.setMaximumSize(btnSize);
 		btnXoa.setMaximumSize(btnSize);
 		
-		
-		
-		//thêm 1 panel Grid để chứa menu nước, chia theo 3 cột tạo menu card
-		
+		pnlGridmenu = new JPanel();
+		pnlGridmenu.setLayout(new GridLayout(0, 5, 30, 30));
+		pnlGridmenu.setPreferredSize(new Dimension(800, 1000)); 
+		pnlGridmenu.add(new JButton("card1"));
+		pnlGridmenu.add(new JButton("card2"));
+		pnlGridmenu.add(new JButton("card3"));
+		pnlGridmenu.add(new JButton("card4"));
+		pnlGridmenu.add(new JButton("card5"));
+		pnlGridmenu.add(new JButton("card6"));
+		pnlGridmenu.add(new JButton("card7"));
+		pnlGridmenu.add(new JButton("card8"));
+		pnlGridmenu.add(new JButton("card9"));
+		pnlGridmenu.add(new JButton("card10"));
+		pnlGridmenu.add(new JButton("card11"));
+		pnlGridmenu.add(new JButton("card12"));
+		pnlGridmenu.add(new JButton("card13"));
+		pnlGridmenu.add(new JButton("card14"));
+		pnlGridmenu.add(new JButton("card15"));
+		JScrollPane scrollPane = new JScrollPane(pnlGridmenu);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(50); //tăng tốc độ lăn chuột
+
 		
 		Object[] colsTable = { "Mã nước", "Tên Nước", "Giá Nước", "Số lượng", "Loại nước" };
 		tblModel = new DefaultTableModel(colsTable, 0);
-		tbl = new JTable();
-		tbl.setModel(tblModel);
+		tbl = new JTable(tblModel);
 		scrollTable = new JScrollPane(tbl);
-		this.add(scrollTable, BorderLayout.CENTER);
+
+		
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPane, scrollTable);
+		splitPane.setResizeWeight(0.6); // tỉ lệ phân chia chiều cao: 60% cho trên, 40% cho dưới
+
+		this.add(splitPane, BorderLayout.CENTER);
+
 
 		pnlWest = new JPanel();
 		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));

@@ -9,18 +9,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import controller.DanhSachNhanVien;
+import dao.NhanVienDAO;
+import model.NhanVien;
 import resource.LookAndFeelConfig;
 import resource.txtSource;
 
@@ -52,6 +58,8 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	private JButton btnSua;
 	private JPanel pnlWest;
 	txtSource txtHelper = new txtSource();
+	static DanhSachNhanVien list = new DanhSachNhanVien();
+	NhanVienDAO dao = new NhanVienDAO();
 
 	public crudNhanVien() {
 		this.setSize(800, 600);
@@ -63,7 +71,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		pnlNorth = new JPanel();
 		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
 		this.add(pnlNorth, BorderLayout.NORTH);
-		lblTitle = new JLabel("CRUD nhân viên");
+		lblTitle = new JLabel("Danh sách nhân viên");
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 25)); // Đặt font và cỡ chữ
 		lblTitle.setForeground(Color.BLUE); // Đặt màu chữ
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
@@ -145,27 +153,155 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		tbl = new JTable();
 		tbl.setModel(tblModel);
 		scrollTable = new JScrollPane(tbl);
+		tbl.setDefaultEditor(Object.class, null);
 		this.add(scrollTable, BorderLayout.CENTER);
 
 		btnThem = new JButton("Thêm");
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
+
 		Dimension btnSize = new Dimension(200, 50);
-		btnThem.setMaximumSize(btnSize); // Cài đặt kích thước tối đa
+		btnThem.setMaximumSize(btnSize);
 		btnSua.setMaximumSize(btnSize);
 		btnXoa.setMaximumSize(btnSize);
+
 		pnlWest = new JPanel();
+		pnlWest.setPreferredSize(new Dimension(150, 0));
 		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
+		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnThem);
+		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnXoa);
+		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnSua);
-		pnlWest.setSize(new Dimension(300, getHeight()));
+		pnlWest.add(Box.createVerticalStrut(30));
 		this.add(pnlWest, BorderLayout.WEST);
+
+		btnThem.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnSua.addActionListener(this);
+		loadDSLenTable();
+	}
+
+	public void loadDSLenTable() {
+		list = dao.layDanhSachNhanVien();
+		if (list == null) {
+			JOptionPane.showMessageDialog(null, "Lấy danh sách nhân viên không thành công");
+			return;
+		}
+
+		for (NhanVien nv : list.getList()) {
+			Object[] row = new Object[6];
+			row[0] = nv.getMaNV();
+			row[1] = nv.getTenNV();
+			row[2] = nv.getSdt();
+			row[3] = nv.getNgaysinh();
+			row[4] = nv.getEmail();
+			row[5] = nv.getMatkhau();
+			tblModel.addRow(row); // Thêm dòng vào bảng
+		}
+	}
+
+	public void themNhanVien() {
+		String manv = txtMaNV.getText();
+		String tennv = txtHotenNV.getText();
+		String sdt = txtSdt.getText();
+		String ngaySinh = txtNgaySinh.getText();
+		String email = txtEmail.getText();
+		String matKhau = txtMatkhau.getText();
+
+		String ngaySinhRegex = "\\d{2}/\\d{2}/\\d{4}";
+		if ((ngaySinh == null) || !ngaySinh.matches(ngaySinhRegex)) {
+			JOptionPane.showMessageDialog(null, "Ngày sinh không được rỗng, phải đúng định dạng");
+			return;
+		}
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dateBorn = LocalDate.parse(ngaySinh, formatter);
+
+		String manvRegex = "NV\\d{3}";
+		if (!list.checktrungma(manv) || manv == null || !manv.matches(manvRegex)) {
+			JOptionPane.showMessageDialog(null, "Không được trùng mã, không được rỗng, phải đúng định dạng");
+			return;
+		}
+
+		String hoTenRegex = "^[\\p{L}\\p{M}\\s]+$";
+		if ((tennv == null) || !tennv.matches(hoTenRegex)) {
+			JOptionPane.showMessageDialog(null, "tên nhân viên không được rỗng, phải đúng định dạng, không có số");
+			return;
+		}
+
+		String sdtRegex = "0[3589]\\d{8}";
+		if ((sdt == null) || !sdt.matches(sdtRegex)) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng, phải đúng định dạng");
+			return;
+		}
+
+		String emailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+		if ((email == null) || !email.matches(emailRegex)) {
+			JOptionPane.showMessageDialog(null, "Email không được rỗng, phải đúng định dạng");
+			return;
+		}
+
+		String matkhauRegex = "";
+		if (matKhau == null) {
+			JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng, phải đúng định dạng");
+			return;
+		}
+
+		NhanVien nvNew = new NhanVien(manv, tennv, sdt, dateBorn, email, matKhau);
+		try {
+
+			list.addList(nvNew);
+			Object[] row = new Object[6];
+			row[0] = nvNew.getMaNV();
+			row[1] = nvNew.getTenNV();
+			row[2] = nvNew.getSdt();
+			row[3] = nvNew.getNgaysinh();
+			row[4] = nvNew.getEmail();
+			row[5] = nvNew.getMatkhau();
+			tblModel.addRow(row);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Lỗi không thêm được dữ liệu");
+		}
+		if (!dao.themNhanVienVaodb(nvNew)) {
+			JOptionPane.showConfirmDialog(null, "Dữ liệu lỗi không thể thêm vào database");
+			return;
+		}
+	}
+
+	public void xoaNhanVien() {
+		int rowSelected = tbl.getSelectedRow();
+		String manv = tbl.getValueAt(rowSelected, 0).toString();
+		if (rowSelected != -1) {
+			int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa nhân viên "+manv+" không?",
+					"Xác nhận xóa", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (confirm == JOptionPane.YES_OPTION) {
+				tblModel.removeRow(rowSelected);
+				if (!list.removeNV(manv)) {
+					JOptionPane.showMessageDialog(null, "lỗi không tìm thấy nhân viên trong list");
+					return;
+				}
+				if (!dao.xoaNhanVienKhoidb(manv)) {
+					JOptionPane.showMessageDialog(null, "lỗi không tìm thấy nhân viên trong database");
+					return;
+				}
+				JOptionPane.showMessageDialog(null, "Xóa thành công nhân viên có mã là: " + manv);
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Bạn chưa chọn nhân viên để xóa");
+			return;
+		}
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getSource() == btnThem) {
+			themNhanVien();
+		} else if (e.getSource() == btnXoa) {
+			xoaNhanVien();
+		}
 
 	}
 

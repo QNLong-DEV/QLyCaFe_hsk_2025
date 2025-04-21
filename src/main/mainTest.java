@@ -20,6 +20,6 @@ public class mainTest {
 //		listNV = new DanhSachNhanVien();
 //		listNV = dao.layDanhSachNhanVien();
 //		System.out.println(listNV);
-		//new dangNhapGUI();
+//		new dangNhapGUI();
 	}
 }

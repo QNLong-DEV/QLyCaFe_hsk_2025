@@ -27,6 +27,7 @@ public class MenuGUI extends JFrame {
 	private crudNhanVien nhanvienGUI;
 	private Dimension screenSize;
 	private MenuNuocGUI menunuocGUI;
+	private JPanel pnlKhachHang;
 
 	public MenuGUI() {
 		setTitle("Quản lý quán cafe");
@@ -49,8 +50,11 @@ public class MenuGUI extends JFrame {
 		pnlDoanhThu = new JPanel();
 		pnlDoanhThu.add(new JLabel("Quản lý doanh thu"));
 
+		pnlKhachHang = new JPanel();
+		pnlKhachHang.add(new JLabel("Quản lý khách hàng"));
+		
 		tabbedPane.addTab("Doanh thu", pnlDoanhThu);
-
+		tabbedPane.addTab("Khách hàng", pnlKhachHang);
 		this.add(tabbedPane);
 
 	}

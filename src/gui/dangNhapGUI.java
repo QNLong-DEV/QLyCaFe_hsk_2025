@@ -79,6 +79,7 @@ public class dangNhapGUI extends JFrame {
 		box2.add(lblMatKhau);
 		box2.add(Box.createHorizontalStrut(20));
 		box2.add(txtMatKhau);
+		
 		pnlCenter = new JPanel();
 		pnlCenter.add(box0);
 		pnlCenter.add(Box.createVerticalStrut(10));

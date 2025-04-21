@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +28,10 @@ public class NhanVienDAO {
 				String maNV = rs.getString("MaNV");
 				String tenNV = rs.getString("TenNV");
 				String sdt = rs.getString("Sdt");
-				String ngaySinh = rs.getString("Ngaysinh");
+				LocalDate ngaySinh = rs.getDate("Ngaysinh").toLocalDate();
 				String email = rs.getString("Email");
 				String matKhau = rs.getString("matkhau");
-
-				System.out.println(
-						maNV + " | " + tenNV + " | " + sdt + " | " + ngaySinh + " | " + email + " | " + matKhau);
+				ds.addList(new NhanVien(maNV, tenNV, sdt, ngaySinh, email, matKhau));
 			}
 
 			rs.close();
@@ -62,5 +61,35 @@ public class NhanVienDAO {
 			e.printStackTrace();
 		}
 		return nv;
+	}
+
+	public boolean themNhanVienVaodb(NhanVien nv) {
+		try (Connection c = connectiondb.getConnection()) {
+			String sql = "INSERT INTO NhanVien (MaNV, TenNV, Sdt, Ngaysinh, Email, matKhau) VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, nv.getMaNV());
+			pst.setString(2, nv.getTenNV());
+			pst.setString(3, nv.getSdt());
+			pst.setDate(4, java.sql.Date.valueOf(nv.getNgaysinh()));
+			pst.setString(5, nv.getEmail());
+			pst.setString(6, nv.getMatkhau());
+
+			return pst.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean xoaNhanVienKhoidb(String ma) {
+		try (Connection c = connectiondb.getConnection()) {
+			String sql = "DELETE FROM NhanVien WHERE MaNV = ?";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, ma);
+			return pst.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
