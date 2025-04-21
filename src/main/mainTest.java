@@ -15,11 +15,7 @@ public class mainTest {
 	private static DanhSachNhanVien listNV;
 
 	public static void main(String[] args) {
-		new MenuGUI();
-//		NhanVienDAO dao = new NhanVienDAO();
-//		listNV = new DanhSachNhanVien();
-//		listNV = dao.layDanhSachNhanVien();
-//		System.out.println(listNV);
-//		new dangNhapGUI();
+		//new MenuGUI();
+		new dangNhapGUI();
 	}
 }
