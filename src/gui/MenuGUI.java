@@ -17,7 +17,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
-import resource.LookAndFeelConfig;
+import util.LookAndFeelConfig;
 
 public class MenuGUI extends JFrame {
 
