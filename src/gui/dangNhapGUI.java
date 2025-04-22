@@ -22,8 +22,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import dao.NhanVienDAO;
 import model.NhanVien;
-import resource.LookAndFeelConfig;
-import resource.txtSource;
+import util.LookAndFeelConfig;
+import util.txtSource;
 
 public class dangNhapGUI extends JFrame {
 	private JPasswordField txtMatKhau;
