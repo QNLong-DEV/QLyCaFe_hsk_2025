@@ -30,6 +30,7 @@ public class NuocDAO {
 			}
 			rs.close();
 			st.close();
+			System.out.println("\n Lấy dữ liệu danh sách nước thành công \n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

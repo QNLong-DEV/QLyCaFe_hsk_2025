@@ -12,6 +12,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -31,11 +32,16 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.DanhSachChiTietDonHang;
 import controller.DanhSachDonHang;
+import controller.DanhSachNhanVien;
 import controller.DanhSachNuoc;
+import dao.NhanVienDAO;
 import dao.NuocDAO;
 import model.ChiTietDonHang;
+import model.DonHang;
+import model.NhanVien;
 import model.Nuoc;
 import util.LookAndFeelConfig;
+import util.MaDonHangGenerator;
 
 public class MenuNuocGUI extends JPanel implements ActionListener {
 
@@ -53,9 +59,10 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	private JPanel pnlGridmenu;
 	private JScrollPane scrollPane;
 	static DanhSachNuoc listNuoc = new DanhSachNuoc();
-	NuocDAO dao = new NuocDAO();
-	static DanhSachDonHang listDonHang = new DanhSachDonHang();
+	NuocDAO Nuocdao = new NuocDAO();
 	static DanhSachChiTietDonHang listChiTietDonHang = new DanhSachChiTietDonHang();
+	NhanVienDAO NhanViendao = new NhanVienDAO();
+	static DanhSachNhanVien listNhanVien = new DanhSachNhanVien();
 	private JPanel pnlCard;
 	private JLabel lblmaCard;
 	private JLabel lbltenCard;
@@ -72,8 +79,12 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	private JButton btnGiam;
 	private JButton btnTang;
 	private JButton btnXoaTrang;
+	private thanhToanGUI thanhtoanWindow = null;
+	static MaDonHangGenerator genMa = new MaDonHangGenerator();
+	private String MaDH = genMa.taoMaDH("A001");
+	private NhanVien nvOn;
 
-	public MenuNuocGUI() {
+	public MenuNuocGUI(String manv) {
 		setLayout(new BorderLayout());
 		LookAndFeelConfig.applyLookAndFeel();
 		lblTitle = new JLabel("Menu Nước", SwingConstants.CENTER);
@@ -81,6 +92,8 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		this.add(lblTitle, BorderLayout.NORTH);
 
 		loadingData();
+		listNhanVien = NhanViendao.layDanhSachNhanVien();
+		nvOn = NhanViendao.getNhanVienByMaNV(manv);
 
 		btnThanhToan = new JButton("Thanh toán");
 		btnHuy = new JButton("Hủy đơn hàng");
@@ -160,11 +173,11 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		btnXoaTrang.addActionListener(this);
 		btnTang.addActionListener(this);
 		btnXoa.addActionListener(this);
-		
+		btnThanhToan.addActionListener(this);
 	}
 
 	public void loadingData() {
-		listNuoc = dao.layDanhSachNuoc();
+		listNuoc = Nuocdao.layDanhSachNuoc();
 		if (listNuoc == null) {
 			JOptionPane.showMessageDialog(null, "Không load được dữ liệu");
 		}
@@ -186,7 +199,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 			}
 		}
 		if (!found) {
-			ChiTietDonHang newCT = new ChiTietDonHang("a", ma, 1, gia, gia);
+			ChiTietDonHang newCT = new ChiTietDonHang("", ma, 1, gia, gia);
 			listChiTietDonHang.themChiTiet(newCT);
 			System.out.println(listChiTietDonHang.xuat());
 			tblModel.addRow(new Object[] { ma, ten, gia, 1, gia });
@@ -314,6 +327,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		return pnlCard;
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnGiam) {
@@ -328,8 +342,20 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		} else if (e.getSource() == btnXoa) {
 			xoaMotMon();
 			setTongTien();
+		} else if (e.getSource() == btnThanhToan) {
+			if (listChiTietDonHang == null || listChiTietDonHang.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Bạn phải chọn món để thanh toán!");
+				return;
+			} else {
+				if (thanhtoanWindow == null) {
+					thanhtoanWindow = new thanhToanGUI();
+				}
+				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn);
+				thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
+				thanhtoanWindow.visibleTrue();
+			}	
+			
 		}
-
 	}
 
 }

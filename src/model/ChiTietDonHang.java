@@ -1,66 +1,66 @@
 package model;
 
 public class ChiTietDonHang {
-	private String maDH;
-	private String maNuoc;
-	private int soLuong;
-	private double donGia;
-	private double thanhTien; // Đây là cột được tính tự động từ DB (computed column)
+	private String MaDH;
+	private String MaNuoc;
+	private int SoLuong;
+	private double DonGia;
+	private double ThanhTien; // Đây là cột được tính tự động từ DB (computed column)
 
 	public ChiTietDonHang(String maDH, String maNuoc, int soLuong, double donGia, double thanhTien) {
 		super();
-		this.maDH = maDH;
-		this.maNuoc = maNuoc;
-		this.soLuong = soLuong;
-		this.donGia = donGia;
-		this.thanhTien = thanhTien;
+		this.MaDH = maDH;
+		this.MaNuoc = maNuoc;
+		this.SoLuong = soLuong;
+		this.DonGia = donGia;
+		this.ThanhTien = thanhTien;
 	}
 
 	public String getMaDH() {
-		return maDH;
+		return MaDH;
 	}
 
 	public void setMaDH(String maDH) {
-		this.maDH = maDH;
+		this.MaDH = maDH;
 	}
 
 
 	public String getMaNuoc() {
-		return maNuoc;
+		return MaNuoc;
 	}
 
 	public void setMaNuoc(String maNuoc) {
-		this.maNuoc = maNuoc;
+		this.MaNuoc = maNuoc;
 	}
 
 	public int getSoLuong() {
-		return soLuong;
+		return SoLuong;
 	}
 
 	public void setSoLuong(int soLuong) {
-		this.soLuong = soLuong;
+		this.SoLuong = soLuong;
 	}
 
 	public double getDonGia() {
-		return donGia;
+		return DonGia;
 	}
 
 	public void setDonGia(double donGia) {
-		this.donGia = donGia;
+		this.DonGia = donGia;
 	}
 
 	public double getThanhTien() {
-		return thanhTien;
+		return ThanhTien;
 	}
 
 	public void setThanhTien(double thanhTien) {
-		this.thanhTien = thanhTien;
+		this.ThanhTien = thanhTien;
 	}
 
 	@Override
 	public String toString() {
-		return "ChiTietDonHang [maDH=" + maDH + ", maNuoc=" + maNuoc + ", soLuong=" + soLuong + ", donGia=" + donGia
-				+ ", thanhTien=" + thanhTien + "]";
+		return "ChiTietDonHang [MaDH=" + MaDH + ", MaNuoc=" + MaNuoc + ", SoLuong=" + SoLuong + ", DonGia=" + DonGia
+				+ ", ThanhTien=" + ThanhTien + "]";
 	}
 	
 
