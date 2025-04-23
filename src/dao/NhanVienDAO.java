@@ -33,7 +33,7 @@ public class NhanVienDAO {
 				String matKhau = rs.getString("matkhau");
 				ds.addList(new NhanVien(maNV, tenNV, sdt, ngaySinh, email, matKhau));
 			}
-
+			System.out.println("Lấy danh sách nhân viên thành công\n");
 			rs.close();
 			stmt.close();
 		} catch (Exception e) {
@@ -57,6 +57,30 @@ public class NhanVienDAO {
 				nv = new NhanVien(rs.getString("MaNV"), rs.getString("TenNV"), rs.getString("Sdt"),
 						rs.getDate("Ngaysinh").toLocalDate(), rs.getString("Email"), rs.getString("matkhau"));
 			}
+			rs.close();
+			pst.close();
+			System.out.println("\n Đăng nhập thành công \n");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nv;
+	}
+	
+	public NhanVien getNhanVienByMaNV(String MaNV) {
+		NhanVien nv = null;
+		try (Connection c = connectiondb.getConnection()) {
+			String sql = "SELECT * FROM NhanVien WHERE MaNV = ?";
+			PreparedStatement pst = c.prepareStatement(sql);
+			pst.setString(1, MaNV);
+			ResultSet rs = pst.executeQuery();
+
+			if (rs.next()) {
+				nv = new NhanVien(rs.getString("MaNV"), rs.getString("TenNV"), rs.getString("Sdt"),
+						rs.getDate("Ngaysinh").toLocalDate(), rs.getString("Email"), rs.getString("matkhau"));
+			}
+			rs.close();
+			pst.close();
+			System.out.println("\n Lấy dữ liệu nhân viên thành công \n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,8 +97,9 @@ public class NhanVienDAO {
 			pst.setDate(4, java.sql.Date.valueOf(nv.getNgaysinh()));
 			pst.setString(5, nv.getEmail());
 			pst.setString(6, nv.getMatkhau());
-
+			System.out.println("\n Thêm dữ liệu nhân viên thành công \n");
 			return pst.executeUpdate() > 0;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -86,6 +111,7 @@ public class NhanVienDAO {
 			String sql = "DELETE FROM NhanVien WHERE MaNV = ?";
 			PreparedStatement pst = c.prepareStatement(sql);
 			pst.setString(1, ma);
+			System.out.println("\n Xóa dữ liệu nhân viên thành công \n");
 			return pst.executeUpdate() > 0;
 		} catch (Exception e) {
 			e.printStackTrace();

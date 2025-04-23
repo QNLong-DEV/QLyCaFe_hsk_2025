@@ -12,6 +12,10 @@ public class DonHang {
 	private DanhSachChiTietDonHang listCTiet;
 	private double TongTien;
 
+	public DonHang() {
+
+	}
+
 	public DonHang(String maDH, String maKH, String maNV, LocalDate ngayDatHang, DanhSachChiTietDonHang listCTiet,
 			double tongTien) {
 		super();
@@ -69,6 +73,12 @@ public class DonHang {
 
 	public void setTongTien(double tongTien) {
 		TongTien = tongTien;
+	}
+
+	@Override
+	public String toString() {
+		return "DonHang [MaDH=" + MaDH + ", MaKH=" + MaKH + ", MaNV=" + MaNV + ", NgayDatHang=" + NgayDatHang
+				+ ", listCTiet=" + listCTiet.xuat()+ ", TongTien=" + TongTien + "]";
 	}
 
 }

@@ -126,9 +126,10 @@ public class dangNhapGUI extends JFrame {
 					loadingwindow.hideLoading();
 					if (nv != null) {
 						JOptionPane.showMessageDialog(null, "Đăng nhập thành công, Xin chào " + nv.getTenNV());
+						String saveMaNV = nv.getMaNV();
 						dispose(); // ẩn cửa sổ đăng nhập
 						loadingwindow.hideLoading();
-						new MenuGUI(); // mở giao diện chính
+						new MenuGUI(saveMaNV); // mở giao diện chính
 					} else {
 						JOptionPane.showMessageDialog(null, "Email hoặc mật khẩu không đúng", "Lỗi",
 								JOptionPane.ERROR_MESSAGE);
