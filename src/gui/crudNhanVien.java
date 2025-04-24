@@ -27,8 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import controller.DanhSachNhanVien;
 import dao.NhanVienDAO;
 import model.NhanVien;
-import resource.LookAndFeelConfig;
-import resource.txtSource;
+import util.LookAndFeelConfig;
+import util.txtSource;
 
 public class crudNhanVien extends JPanel implements ActionListener, FocusListener {
 

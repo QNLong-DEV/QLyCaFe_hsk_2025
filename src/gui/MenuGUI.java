@@ -17,7 +17,7 @@ import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
-import resource.LookAndFeelConfig;
+import util.LookAndFeelConfig;
 
 public class MenuGUI extends JFrame {
 
@@ -30,7 +30,7 @@ public class MenuGUI extends JFrame {
 	private JPanel pnlKhachHang;
 	private ThongKeDoanhThuGUI thongkeGUI;
 
-	public MenuGUI() {
+	public MenuGUI(String manv) {
 		setTitle("Quản lý quán cafe");
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width, screenSize.height);
@@ -39,13 +39,14 @@ public class MenuGUI extends JFrame {
 		setVisible(true);
 
 		LookAndFeelConfig.applyLookAndFeel();
+		setLayout(new BorderLayout());
+
 		tabbedPane = new JTabbedPane();
-		JTabbedPane tabbedPane = new JTabbedPane();
 
 		nhanvienGUI = new crudNhanVien();
 		tabbedPane.addTab("Nhân viên", nhanvienGUI);
 
-		menunuocGUI = new MenuNuocGUI();
+		menunuocGUI = new MenuNuocGUI(manv);
 		tabbedPane.addTab("Menu nước", menunuocGUI);
 
 		thongkeGUI = new ThongKeDoanhThuGUI();
@@ -53,9 +54,15 @@ public class MenuGUI extends JFrame {
 
 		pnlKhachHang = new JPanel();
 		pnlKhachHang.add(new JLabel("Quản lý khách hàng"));
-
 		tabbedPane.addTab("Khách hàng", pnlKhachHang);
-		this.add(tabbedPane);
+
+		this.add(tabbedPane, BorderLayout.CENTER);
+
+		JLabel lblXinChao = new JLabel("Xin chào NV  " + manv);
+		lblXinChao.setFont(new Font("Arial", Font.BOLD, 16));
+		lblXinChao.setHorizontalAlignment(JLabel.CENTER);
+		lblXinChao.setForeground(new Color(0, 102, 204));
+		this.add(lblXinChao, BorderLayout.SOUTH);
 
 	}
 }
