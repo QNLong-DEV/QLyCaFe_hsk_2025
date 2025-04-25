@@ -65,7 +65,7 @@ public class NhanVienDAO {
 		}
 		return nv;
 	}
-	
+
 	public NhanVien getNhanVienByMaNV(String MaNV) {
 		NhanVien nv = null;
 		try (Connection c = connectiondb.getConnection()) {
@@ -97,9 +97,11 @@ public class NhanVienDAO {
 			pst.setDate(4, java.sql.Date.valueOf(nv.getNgaysinh()));
 			pst.setString(5, nv.getEmail());
 			pst.setString(6, nv.getMatkhau());
+			int rows = pst.executeUpdate();
+			pst.close();
 			System.out.println("\n Thêm dữ liệu nhân viên thành công \n");
-			return pst.executeUpdate() > 0;
-			
+			return rows > 0;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

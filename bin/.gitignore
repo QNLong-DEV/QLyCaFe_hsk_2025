@@ -1,9 +1,6 @@
-/main/
-/model/
-/controller/
 /dao/
+/controller/
 /gui/
-/img/
-/connection/
-/resource/
+/model/
+/main/
 /util/

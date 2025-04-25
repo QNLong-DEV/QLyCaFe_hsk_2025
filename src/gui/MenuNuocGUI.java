@@ -351,7 +351,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 					thanhtoanWindow = new thanhToanGUI();
 				}
 				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn);
-				thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
+				//thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
 				thanhtoanWindow.visibleTrue();
 			}	
 			
