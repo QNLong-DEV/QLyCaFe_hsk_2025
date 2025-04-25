@@ -1,83 +1,136 @@
 package gui;
 
+import dao.BaoCaoDAO;
+import model.BaoCao;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
-import org.jfree.chart.*;
-import org.jfree.chart.plot.*;
-import org.jfree.data.category.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-public class ThongKeDoanhThuGUI extends JPanel {
-	private JComboBox<String> cboLoaiThongKe;
-	private ChartPanel chartPanel;
+public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
+    private ChartPanel chartPanel;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private BaoCaoDAO baoCaoDAO;
+    private JRadioButton radNgay;
+    private JRadioButton radThang;
+    private JRadioButton radNam;
+    private JPanel pLeft;
 
-	public ThongKeDoanhThuGUI() {
-		setSize(800, 600);
-		setLayout(new BorderLayout());
+    public ThongKeDoanhThuGUI() {
+        setSize(800, 600);
+        baoCaoDAO = new BaoCaoDAO();
+        setLayout(new BorderLayout());
 
-		// ComboBox
-		cboLoaiThongKe = new JComboBox<>(new String[] { "Theo ngày", "Theo tháng", "Theo năm" });
-		cboLoaiThongKe.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				capNhatBieuDo();
-			}
-		});
+        pLeft = new JPanel(new GridLayout(3, 1, 10, 10));
+        pLeft.setBorder(BorderFactory.createTitledBorder("Loại thống kê"));
 
-		JPanel topPanel = new JPanel();
-		topPanel.add(new JLabel("Chọn loại thống kê:"));
-		topPanel.add(cboLoaiThongKe);
-		add(topPanel, BorderLayout.NORTH);
+        radNgay = new JRadioButton("Theo ngày");
+        radThang = new JRadioButton("Theo tháng");
+        radNam = new JRadioButton("Theo năm");
 
-		// Biểu đồ mặc định
-		chartPanel = new ChartPanel(createDoanhThuTheoNgayChart());
-		add(chartPanel, BorderLayout.CENTER);
+        ButtonGroup group = new ButtonGroup();
+        group.add(radNgay);
+        group.add(radThang);
+        group.add(radNam);
 
-		setVisible(true);
-	}
+        pLeft.add(radNgay);
+        pLeft.add(radThang);
+        pLeft.add(radNam);
+        add(pLeft, BorderLayout.WEST);
 
-	private void capNhatBieuDo() {
-		String selected = (String) cboLoaiThongKe.getSelectedItem();
-		JFreeChart chart = null;
+        radNgay.addActionListener(this);
+        radThang.addActionListener(this);
+        radNam.addActionListener(this);
 
-		switch (selected) {
-		case "Theo ngày":
-			chart = createDoanhThuTheoNgayChart();
-			break;
-		case "Theo tháng":
-			chart = createDoanhThuTheoThangChart();
-			break;
-		case "Theo năm":
-			chart = createDoanhThuTheoNamChart();
-			break;
-		}
+        chartPanel = new ChartPanel(null);
+        add(chartPanel, BorderLayout.CENTER);
 
-		chartPanel.setChart(chart);
-	}
+        tableModel = new DefaultTableModel(new Object[]{"Thời gian", "Doanh thu", "Tổng số đơn"}, 0);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(800, 200));
+        add(scrollPane, BorderLayout.SOUTH);
 
-	private JFreeChart createDoanhThuTheoNgayChart() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.addValue(1200000, "Doanh thu", "01/04");
-		dataset.addValue(1800000, "Doanh thu", "02/04");
-		dataset.addValue(1500000, "Doanh thu", "03/04");
-		return ChartFactory.createBarChart("Doanh thu theo ngày", "Ngày", "VNĐ", dataset);
-	}
+        radNgay.setSelected(true);
+        capNhatBieuDo("ngay");
+    }
 
-	private JFreeChart createDoanhThuTheoThangChart() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.addValue(25000000, "Doanh thu", "Tháng 1");
-		dataset.addValue(30000000, "Doanh thu", "Tháng 2");
-		return ChartFactory.createBarChart("Doanh thu theo tháng", "Tháng", "VNĐ", dataset);
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if(o == radNgay) {
+            capNhatBieuDo("ngay");
+        }else if(o == radThang) {
+            capNhatBieuDo("thang");
+        }else if(o == radNam) {
+            capNhatBieuDo("nam");
+        }
+    }
 
-	private JFreeChart createDoanhThuTheoNamChart() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.addValue(350000000, "Doanh thu", "2022");
-		dataset.addValue(420000000, "Doanh thu", "2023");
-		return ChartFactory.createBarChart("Doanh thu theo năm", "Năm", "VNĐ", dataset);
-	}
+    private void capNhatBieuDo(String kieu) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<BaoCao> list;
 
-	public static void main(String[] args) {
-		new ThongKeDoanhThuGUI();
+        switch(kieu) {
+            case "ngay":
+                list = baoCaoDAO.layDoanhThuTheoNgay();
+                break;
+            case "thang":
+                list = baoCaoDAO.layDoanhThuTheoThang();
+                break;
+            case "nam":
+                list = baoCaoDAO.layDoanhThuTheoNam();
+                break;
+            default:
+                list = List.of();
+                break;
+        }
+
+        tableModel.setRowCount(0);
+        if(list.isEmpty()) {
+            System.out.println("Không có dữ liệu để hiển thị.");
+            return;
+        }
+
+        for(BaoCao baoCao : list) {
+            String time = baoCao.getThoiGian();
+            double dThu = baoCao.getDoanhThu();
+            int tongDon = baoCao.getTongSoDon();
+
+            dataset.addValue(dThu, "Doanh thu", time);
+            tableModel.addRow(new Object[]{time, dThu, tongDon});
+        }
+
+        String chartTitle = switch(kieu) {
+            case "ngay" -> "Doanh thu theo ngày";
+            case "thang" -> "Doanh thu theo tháng";
+            case "nam" -> "Doanh thu theo năm";
+            default -> "Biểu đồ doanh thu";
+        };
+
+        if(dataset.getRowCount() > 0) {
+            JFreeChart chart = ChartFactory.createBarChart(
+                    chartTitle,
+                    "Thời gian",
+                    "VNĐ",
+                    dataset
+            );
+            chartPanel.setChart(chart);
+        }else {
+            System.out.println("Không có dữ liệu để hiển thị biểu đồ.");
+        }
+    }
+
+    public static void main(String[] args) {
+    	new ThongKeDoanhThuGUI();
 	}
 }
+

@@ -1,9 +1,5 @@
-/main/
 /model/
 /controller/
-/dao/
 /gui/
-/img/
+/dao/
 /connection/
-/resource/
-/util/
