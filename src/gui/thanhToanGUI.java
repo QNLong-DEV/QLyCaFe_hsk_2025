@@ -8,6 +8,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,11 +26,17 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.DanhSachChiTietDonHang;
 import controller.DanhSachDonHang;
+import controller.DanhSachKhachHang;
+import dao.ChiTietDonHangDAO;
+import dao.DonHangDAO;
+import dao.KhachHangDAO;
 import model.ChiTietDonHang;
 import model.DonHang;
+import model.KhachHang;
 import model.NhanVien;
 import util.LookAndFeelConfig;
 import util.MaDonHangGenerator;
+import util.MaKhachHangGenerator;
 
 public class thanhToanGUI extends JFrame implements ActionListener {
 	private JPanel pnlNorth;
@@ -58,13 +65,29 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 	private JPanel pnlSouth;
 	private JButton btnXacNhan;
 	private JButton btnHuyDon;
+	private JButton btnTim;
+
 	static DanhSachChiTietDonHang listChiTietDonHang = new DanhSachChiTietDonHang();
 	static DonHang dh;
-	static MaDonHangGenerator genMa = new MaDonHangGenerator();
+	static MaDonHangGenerator genMaDH = new MaDonHangGenerator();
+	static MaKhachHangGenerator genMaKH = new MaKhachHangGenerator();
 	static DanhSachDonHang listDonHang = new DanhSachDonHang();
+	static DanhSachKhachHang listKhachHang = new DanhSachKhachHang();
+	static KhachHangDAO khachhangdao = new KhachHangDAO();
+	static DonHangDAO donhangdao = new DonHangDAO();
+	static ChiTietDonHangDAO chitietdonhangdao = new ChiTietDonHangDAO();
+	static String maDH;
+	static KhachHang khON;
 	static NhanVien nvOn;
 
+	private String madhvanglai;
+	private String maKHVangLai;
+	private String tenKHVangLai;
+	private JButton btnTaoDonVangLai;
+	private static String sdtKHVangLai = "xxx";
+
 	public thanhToanGUI() {
+		listKhachHang = khachhangdao.getALLKhachHang();
 		setTitle("Thanh Toán");
 		setSize(600, 600);
 		setLocationRelativeTo(null);
@@ -87,6 +110,8 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		lblSdt.setMaximumSize(lblsize);
 		txtSdt = new JTextField(10);
 		txtSdt.setMaximumSize(txtsize);
+		btnTim = new JButton("Tìm");
+		btnTaoDonVangLai = new JButton("Tạo đơn hàng vãng lai");
 
 		lblTenKH = new JLabel("Tên khách hàng:");
 		lblTenKH.setMaximumSize(lblsize);
@@ -111,8 +136,12 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 
 		Box0 = new Box(BoxLayout.X_AXIS);
 		Box0.add(lblSdt);
-		Box0.add(Box.createHorizontalStrut(10));
+		Box0.add(Box.createHorizontalStrut(20));
 		Box0.add(txtSdt);
+		Box0.add(Box.createHorizontalStrut(10));
+		Box0.add(btnTim);
+		Box0.add(Box.createHorizontalStrut(10));
+		Box0.add(btnTaoDonVangLai);
 		Box0.add(Box.createHorizontalStrut(10));
 
 		Box1 = new Box(BoxLayout.X_AXIS);
@@ -176,6 +205,9 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		add(pnlSouth, BorderLayout.SOUTH);
 
 		btnXacNhan.addActionListener(this);
+		btnHuyDon.addActionListener(this);
+		btnTim.addActionListener(this);
+		btnTaoDonVangLai.addActionListener(this);
 		setVisible(false);
 	}
 
@@ -203,35 +235,103 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		txtMaNV.setText(nvOn.getMaNV());
 	}
 
-	public void setTongTienThanhToan(String tong) {
-		txtTong.setText(tong);
+	public void napDonHangVangLai() {
+		KhachHang khVangLai = khachhangdao.timTheoMaKH("VL01");
+		double tongtien = listChiTietDonHang.tongTien("Vãng lai");
+		maKHVangLai = "VL01";
+		tenKHVangLai = khVangLai.getTenKH();
+		sdtKHVangLai = khVangLai.getSdt();
+		txtSdt.setText(sdtKHVangLai);
+		txtTenKH.setText(tenKHVangLai);
+		txtLoaiKH.setText("Vãng lai");
+		txtTong.setText(String.valueOf(tongtien));
 	}
 
-	public void taoDonHang() {
-		LocalDate ngaydat = LocalDate.now();
-		String MaDH = genMa.taoMaDH("A001");
+	public void taoDonHangVangLai() {
+		madhvanglai = genMaDH.taoMaDHVangLai();
 		for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
-			ct.setMaDH(MaDH);
+			ct.setMaDH(madhvanglai);
 		}
-		dh = new DonHang(MaDH, "A001", nvOn.getMaNV(), ngaydat, listChiTietDonHang, listChiTietDonHang.tongTien());
-		if (listDonHang.themDH(dh)) {
-			System.out.println(listDonHang.xuat());
-			JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
-			this.visibleFalse();
-			return;
-		} else {
-			JOptionPane.showMessageDialog(null, "Thanh toán không thành công!");
-			return;
-		}
+		dh = new DonHang(madhvanglai, maKHVangLai, nvOn.getMaNV(), "Vãng lai", LocalDateTime.now(), listChiTietDonHang,
+				listChiTietDonHang.tongTien("Vãng lai"));
 
+		donhangdao.saveDonHang(dh);
+		for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
+			chitietdonhangdao.saveChiTietDonHang(ct);
+		}
+		JOptionPane.showMessageDialog(null, "Thanh toán vãng lai thành công!");
+		dh = null;
+	}
+
+	public void napThongTinKhachHang(KhachHang kh) {
+		khON = kh;
+		txtTenKH.setText(kh.getTenKH());
+		txtSdt.setText(kh.getSdt());
+		txtLoaiKH.setText(kh.getLoaiKH());
+	}
+
+	public void napThongTinDonHang() {
+		String sdt = txtSdt.getText();
+		khON = khachhangdao.timTheoSDT(sdt);
+		if (khON != null) {
+			double tongtien = listChiTietDonHang.tongTien(khON.getLoaiKH());
+			for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
+				ct.setMaDH(khON.getMaKH());
+			}
+			txtTenKH.setText(khON.getTenKH());
+			txtLoaiKH.setText(khON.getLoaiKH());
+			txtTong.setText(String.valueOf(tongtien));
+		} else {
+			int response = JOptionPane.showConfirmDialog(null,
+					"Khách hàng chưa có hội viên! Bạn có muốn tạo hội viên cho khách hàng?", "Xác nhận",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (response == JOptionPane.YES_OPTION) {
+				taoTaiKhoanKHGUI taoForm = new taoTaiKhoanKHGUI(this, this);
+				double tongtien = listChiTietDonHang.tongTien(khON.getLoaiKH());
+				for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
+					ct.setMaDH(khON.getMaKH());
+				}
+				txtSdt.setText(khON.getSdt());
+				txtTenKH.setText(khON.getTenKH());
+				txtLoaiKH.setText(khON.getLoaiKH());
+				txtTong.setText(String.valueOf(tongtien));
+				System.out.println("tạo tài khoản");
+			} else {
+				return;
+			}
+		}
+	}
+
+	public void taoDonHangHoiVien() {
+		maDH = genMaDH.taoMaDH(khON.getMaKH());
+		for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
+			ct.setMaDH(maDH);
+		}
+		dh = new DonHang(maDH, khON.getMaKH(), nvOn.getMaNV(), khON.getLoaiKH(), LocalDateTime.now(),
+				listChiTietDonHang, listChiTietDonHang.tongTien(khON.getLoaiKH()));
+		donhangdao.saveDonHang(dh);
+		for (ChiTietDonHang ct : listChiTietDonHang.getList()) {
+			chitietdonhangdao.saveChiTietDonHang(ct);
+		}
+		JOptionPane.showMessageDialog(null, "Thanh toán hội viên thành công!");
+		khON = null;
+		dh = null;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnXacNhan) {
-			taoDonHang();
+			if (khON == null) {
+				taoDonHangVangLai();
+			} else {
+				taoDonHangHoiVien();
+			}
+		} else if (e.getSource() == btnHuyDon) {
+
+		} else if (e.getSource() == btnTim) {
+			napThongTinDonHang();
+		} else if (e.getSource() == btnTaoDonVangLai) {
+			napDonHangVangLai();
 		}
-
 	}
-
 }

@@ -63,7 +63,7 @@ public class DanhSachNuoc {
 		return true;
 	}
 
-	public boolean removeNV(String manuoc) {
+	public boolean removeNuoc(String manuoc) {
 		for (Nuoc x : list) {
 			if (x.getMaNuoc().equalsIgnoreCase(manuoc)) {
 				list.remove(x);

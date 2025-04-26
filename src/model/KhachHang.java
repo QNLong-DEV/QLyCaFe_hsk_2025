@@ -1,15 +1,20 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class KhachHang {
 	private String MaKH;
 	private String TenKH;
 	private String Sdt;
 	private String LoaiKH;
-	private LocalDate NgayDangKy;
+	private LocalDateTime NgayDangKy;
 
-	public KhachHang(String maKH, String tenKH, String sdt, String loaiKH, LocalDate ngayDangKy) {
+	public KhachHang() {
+
+	}
+
+	public KhachHang(String maKH, String tenKH, String sdt, String loaiKH, LocalDateTime ngayDangKy) {
 		super();
 		MaKH = maKH;
 		TenKH = tenKH;
@@ -50,11 +55,11 @@ public class KhachHang {
 		LoaiKH = loaiKH;
 	}
 
-	public LocalDate getNgayDangKy() {
+	public LocalDateTime getNgayDangKy() {
 		return NgayDangKy;
 	}
 
-	public void setNgayDangKy(LocalDate ngayDangKy) {
+	public void setNgayDangKy(LocalDateTime ngayDangKy) {
 		NgayDangKy = ngayDangKy;
 	}
 

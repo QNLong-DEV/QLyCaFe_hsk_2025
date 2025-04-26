@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import controller.DanhSachChiTietDonHang;
 
@@ -8,7 +9,8 @@ public class DonHang {
 	private String MaDH;
 	private String MaKH;
 	private String MaNV;
-	private LocalDate NgayDatHang;
+	private String LoaiKH;
+	private LocalDateTime NgayDatHang;
 	private DanhSachChiTietDonHang listCTiet;
 	private double TongTien;
 
@@ -16,14 +18,15 @@ public class DonHang {
 
 	}
 
-	public DonHang(String maDH, String maKH, String maNV, LocalDate ngayDatHang, DanhSachChiTietDonHang listCTiet,
-			double tongTien) {
+	public DonHang(String maDH, String maKH, String maNV, String loaiKH, LocalDateTime ngayDatHang,
+			DanhSachChiTietDonHang listCTiet, double tongTien) {
 		super();
 		MaDH = maDH;
 		MaKH = maKH;
 		MaNV = maNV;
+		LoaiKH = loaiKH;
 		NgayDatHang = ngayDatHang;
-		this.listCTiet = (listCTiet != null) ? listCTiet : new DanhSachChiTietDonHang();
+		this.listCTiet = listCTiet;
 		TongTien = tongTien;
 	}
 
@@ -51,11 +54,19 @@ public class DonHang {
 		MaNV = maNV;
 	}
 
-	public LocalDate getNgayDatHang() {
+	public String getLoaiKH() {
+		return LoaiKH;
+	}
+
+	public void setLoaiKH(String loaiKH) {
+		LoaiKH = loaiKH;
+	}
+
+	public LocalDateTime getNgayDatHang() {
 		return NgayDatHang;
 	}
 
-	public void setNgayDatHang(LocalDate ngayDatHang) {
+	public void setNgayDatHang(LocalDateTime ngayDatHang) {
 		NgayDatHang = ngayDatHang;
 	}
 
@@ -66,7 +77,7 @@ public class DonHang {
 	public void setListCTiet(DanhSachChiTietDonHang listCTiet) {
 		this.listCTiet = listCTiet;
 	}
-
+	
 	public double getTongTien() {
 		return TongTien;
 	}
@@ -77,8 +88,7 @@ public class DonHang {
 
 	@Override
 	public String toString() {
-		return "DonHang [MaDH=" + MaDH + ", MaKH=" + MaKH + ", MaNV=" + MaNV + ", NgayDatHang=" + NgayDatHang
-				+ ", listCTiet=" + listCTiet.xuat()+ ", TongTien=" + TongTien + "]";
+		return "DonHang [MaDH=" + MaDH + ", MaKH=" + MaKH + ", MaNV=" + MaNV + ", LoaiKH=" + LoaiKH + ", NgayDatHang="
+				+ NgayDatHang + ", listCTiet=" + listCTiet + ", TongTien=" + TongTien + "]";
 	}
-
 }
