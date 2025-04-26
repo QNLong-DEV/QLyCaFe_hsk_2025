@@ -15,6 +15,15 @@ public class MaDonHangGenerator {
 
 		return "DH-" + ngayHienTai + "-" + gioDangFormat + "-" + makh;
 	}
+	
+	public String taoMaDHVangLai() {
+		String ngayHienTai = new SimpleDateFormat("ddMMyyyy").format(new Date());
+		LocalTime gioHienTai = LocalTime.now();
+		DateTimeFormatter dinhDang = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String gioDangFormat = gioHienTai.format(dinhDang);
+
+		return "DH-VangLai-" + ngayHienTai + "-" + gioDangFormat;
+	}
 
 
 }

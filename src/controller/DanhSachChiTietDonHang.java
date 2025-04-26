@@ -220,13 +220,22 @@ public class DanhSachChiTietDonHang {
 		return false;
 	}
 
-	public double tongTien() {
+	public double tongTien(String loaikh) {
 		if (list == null || list.isEmpty())
 			return 0;
 		double res = 0;
 		for (ChiTietDonHang x : list) {
 			res += x.getThanhTien();
 		}
+
+		if (loaikh != null) {
+			if (loaikh.equals("Tiềm năng")) {
+				res *= 0.95;
+			} else if (loaikh.equals("Thân thiết")) {
+				res *= 0.9;
+			}
+		}
+
 		return res;
 	}
 
