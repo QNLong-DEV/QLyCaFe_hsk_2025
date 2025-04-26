@@ -30,6 +30,7 @@ public class DanhSachDonHang {
 		return false;
 	}
 
+	
 	public String xuat() {
 		String res = "";
 		for (DonHang x : list) {

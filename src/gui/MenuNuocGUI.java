@@ -244,7 +244,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	}
 
 	public void setTongTien() {
-		double tong = listChiTietDonHang.tongTien();
+		double tong = listChiTietDonHang.tongTien("");
 		txtTong.setText(String.valueOf(tong) + "Đ");
 	}
 

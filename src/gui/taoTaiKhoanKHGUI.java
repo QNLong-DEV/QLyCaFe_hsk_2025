@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,7 +27,7 @@ import model.KhachHang;
 import util.LookAndFeelConfig;
 import util.MaKhachHangGenerator;
 
-public class taoTaiKhoanKHGUI extends JFrame implements ActionListener {
+public class taoTaiKhoanKHGUI extends JDialog implements ActionListener {
 
 	private JPanel pnlNorth;
 	private JLabel lblTitle;
@@ -47,13 +48,14 @@ public class taoTaiKhoanKHGUI extends JFrame implements ActionListener {
 	private String makh = genmakh.taoMaKH();
 	private thanhToanGUI parent;
 
-	public taoTaiKhoanKHGUI(thanhToanGUI parentGUI) {
-		this.parent = parentGUI;
+	public taoTaiKhoanKHGUI(JFrame parentGUI, thanhToanGUI parentThanhToanGUI) {
+		super(parentGUI, "Đăng ký hội viên", true);
+		this.parent = parentThanhToanGUI;
 		setTitle("Đăng ký hội viên");
 		setSize(400, 200);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setVisible(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); 
+		
 		LookAndFeelConfig.applyLookAndFeel();
 
 		pnlNorth = new JPanel();
@@ -109,6 +111,7 @@ public class taoTaiKhoanKHGUI extends JFrame implements ActionListener {
 
 		btnXacNhan.addActionListener(this);
 		btnHuyDon.addActionListener(this);
+		setVisible(true);
 
 	}
 
@@ -125,8 +128,7 @@ public class taoTaiKhoanKHGUI extends JFrame implements ActionListener {
 			return;
 		} else {
 			JOptionPane.showMessageDialog(null, "Thêm hội viên thành công");
-			parent.loadlistkh();
-			parent.loadthongtin(ma);
+			parent.napThongTinKhachHang(kh);
 			this.dispose();
 			return;
 		}
@@ -146,4 +148,5 @@ public class taoTaiKhoanKHGUI extends JFrame implements ActionListener {
 //	public static void main(String[] args) {
 //		new taoTaiKhoanKHGUI();
 //	}
+
 }

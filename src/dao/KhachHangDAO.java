@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.github.weisj.jsvg.geometry.mesh.CoonPatch;
@@ -92,4 +93,57 @@ public class KhachHangDAO {
 			connectiondb.closeConnection(con);
 		}
 	}
+
+	public KhachHang timTheoMaKH(String maKH) {
+
+		try {
+			con = connectiondb.getConnection();
+			String sql = "SELECT * FROM KhachHang WHERE MaKH = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+
+			pstmt.setString(1, maKH);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				KhachHang kh = new KhachHang(rs.getString("MaKH"), rs.getString("TenKH"), rs.getString("Sdt"),
+						rs.getString("LoaiKH"), rs.getDate("NgayDangKy").toLocalDate().atStartOfDay());
+				return kh;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectiondb.closeConnection(con);
+		}
+
+		return null;
+	}
+
+	public KhachHang timTheoSDT(String sdt) {
+
+		try {
+			con = connectiondb.getConnection();
+			String sql = "SELECT * FROM KhachHang WHERE Sdt = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+
+			pstmt.setString(1, sdt);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				KhachHang kh = new KhachHang(rs.getString("MaKH"), rs.getString("TenKH"), rs.getString("Sdt"),
+						rs.getString("LoaiKH"), rs.getDate("NgayDangKy").toLocalDate().atStartOfDay());
+				return kh;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectiondb.closeConnection(con);
+		}
+
+		return null;
+	}
+	
 }
