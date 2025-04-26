@@ -112,7 +112,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 
 		pnlGridmenu = new JPanel();
 		pnlGridmenu.setLayout(new GridLayout(0, 5, 30, 30));
-		pnlGridmenu.setPreferredSize(new Dimension(800, 1000));
+
 
 		for (Nuoc nuoc : listNuoc.getList()) {
 			JPanel pnlCard = createCard(nuoc.getMaNuoc(), nuoc.getTenNuoc(), nuoc.getGia(), nuoc.getLoai(),
@@ -129,14 +129,14 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		tblModel = new DefaultTableModel(colsTable, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return false; // Tắt chỉnh sửa cho tất cả các ô
+				return false;
 			}
 		};
 		tbl = new JTable(tblModel);
 		scrollTable = new JScrollPane(tbl);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPane, scrollTable);
-		splitPane.setResizeWeight(0.6); // tỉ lệ phân chia chiều cao: 60% cho trên, 40% cho dưới
+		splitPane.setResizeWeight(0.6);
 
 		this.add(splitPane, BorderLayout.CENTER);
 
@@ -262,16 +262,16 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	public JPanel createCard(String ma, String ten, double gia, String loai, String img) {
 		String giaString = String.valueOf(gia);
 
-		// String imgPath = "D:\\QLyCaFe_hsk_2025\\src\\img\\trasua1.jpg";
+		// String imgPath = "D:\\QLyCaFe_hsk_2025\\src\\img\\trasua2.jpg";
 
 		pnlCard = new JPanel();
 		pnlCard.setLayout(new BorderLayout());
 		pnlCard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		pnlCard.setPreferredSize(new Dimension(200, 300));
+		pnlCard.setMaximumSize(new Dimension(350, 400));
 
-		ImageIcon icon = new ImageIcon("src/img/trasua1.jpg");
+		ImageIcon icon = new ImageIcon("src/img/" + img);
 		Image imgNuoc = icon.getImage();
-		Image scaledImg = imgNuoc.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image scaledImg = imgNuoc.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImg);
 		JLabel lblImg = new JLabel(scaledIcon);
 
@@ -327,7 +327,6 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		return pnlCard;
 	}
 
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnGiam) {
@@ -351,10 +350,10 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 					thanhtoanWindow = new thanhToanGUI();
 				}
 				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn);
-				//thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
+				// thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
 				thanhtoanWindow.visibleTrue();
-			}	
-			
+			}
+
 		}
 	}
 
