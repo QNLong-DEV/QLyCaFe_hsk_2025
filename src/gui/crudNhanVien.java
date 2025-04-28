@@ -72,6 +72,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	private JLabel lblTT;
 	private JLabel lblCNTT;
 	private Box BoxTT;
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	public crudNhanVien(String manv) {
 		nvON = dao.getNhanVienByMaNV(manv);
@@ -278,7 +279,6 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 			return;
 		}
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate dateBorn = LocalDate.parse(ngaySinh, formatter);
 
 		NhanVien nvNew = new NhanVien(nvON.getMaNV(), tennv, sdt, dateBorn, email, nvON.getMatkhau());
@@ -293,7 +293,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	public void loadLaiThongTinNhanVien() {
 		lblMaNVshow.setText("Mã nhân viên: " + nvON.getMaNV());
 		lblTenNVshow.setText("Tên nhân viên: " + nvON.getTenNV());
-		lblNgaySinhNVshow.setText("Ngày sinh nhân viên: " + nvON.getNgaysinh().toString());
+		lblNgaySinhNVshow.setText("Ngày sinh nhân viên: " + formatter.format(nvON.getNgaysinh()));
 		lblSdtNVshow.setText("SDT nhân viên: " + nvON.getSdt());
 		lblEmailNVshow.setText("Email nhân viên: " + nvON.getEmail());
 	}

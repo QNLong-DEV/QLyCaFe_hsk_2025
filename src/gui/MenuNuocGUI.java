@@ -16,6 +16,7 @@ import java.awt.MediaTracker;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 	private JPanel pnlCardEast;
 	private Color lblcolorblue;
 	private Font lblcardfont;
+	DecimalFormat decimalFormat = new DecimalFormat("###,###");
 
 	public MenuNuocGUI(String manv) {
 		setLayout(new BorderLayout());
@@ -109,7 +111,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		lblTitle = new JLabel("Menu Nước", SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
 		lblTitle.setForeground(new Color(168, 80, 28));
-		
+
 		pnlNorth.add(lblTitle, BorderLayout.CENTER);
 		JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		lblTimNuoc = new JLabel("Tìm nước:");
@@ -134,7 +136,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		btnXoaTrang = new JButton("Xóa tất cả");
 
 		Dimension btnSize = new Dimension(200, 50);
-		btnThanhToan.setMaximumSize(btnSize); // Cài đặt kích thước tối đa
+		btnThanhToan.setMaximumSize(btnSize);
 		btnXoa.setMaximumSize(btnSize);
 		btnGiam.setMaximumSize(btnSize);
 		btnTang.setMaximumSize(btnSize);
@@ -217,13 +219,14 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 	public void tangVaTaoMoiMonNuoc(String ma, String ten, double gia, String loai) {
 		boolean found = false;
 
+		String giaString = decimalFormat.format(gia);
 		for (int i = 0; i < tblModel.getRowCount(); i++) {
 			String maNuocCoTrongTable = tblModel.getValueAt(i, 0).toString();
 
 			if (maNuocCoTrongTable.equalsIgnoreCase(ma)) {
 				int cotSoLuong = (Integer) tblModel.getValueAt(i, 3);
 				tblModel.setValueAt(cotSoLuong + 1, i, 3);
-				tblModel.setValueAt(listChiTietDonHang.tangSoLuonNuoc(maNuocCoTrongTable), i, 4);
+				tblModel.setValueAt(decimalFormat.format(listChiTietDonHang.tangSoLuonNuoc(maNuocCoTrongTable)), i, 4);
 				System.out.println(listChiTietDonHang.xuat());
 				found = true;
 				break;
@@ -233,7 +236,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 			ChiTietDonHang newCT = new ChiTietDonHang("", ma, 1, gia, gia);
 			listChiTietDonHang.themChiTiet(newCT);
 			System.out.println(listChiTietDonHang.xuat());
-			tblModel.addRow(new Object[] { ma, ten, gia, 1, gia });
+			tblModel.addRow(new Object[] { ma, ten, giaString, 1, giaString });
 		}
 	}
 
@@ -250,7 +253,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		if (thanhtien <= 0) {
 			tblModel.removeRow(selectedRow);
 		} else {
-			tblModel.setValueAt(thanhtien, selectedRow, 4);
+			tblModel.setValueAt(decimalFormat.format(thanhtien), selectedRow, 4);
 		}
 		System.out.println(listChiTietDonHang.xuat());
 	}
@@ -265,7 +268,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		int soLuongHienHanh = (Integer) tbl.getValueAt(selectedRow, 3);
 		tblModel.setValueAt(soLuongHienHanh + 1, selectedRow, 3);
 		double thanhtien = listChiTietDonHang.tangSoLuongNuoc(maNuocDangDuocChon);
-		tblModel.setValueAt(thanhtien, selectedRow, 4);
+		tblModel.setValueAt(decimalFormat.format(thanhtien), selectedRow, 4);
 		System.out.println(listChiTietDonHang.xuat());
 	}
 
@@ -276,7 +279,8 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 
 	public void setTongTien() {
 		double tong = listChiTietDonHang.tongTien("");
-		txtTong.setText(String.valueOf(tong) + "Đ");
+		String tongTien = decimalFormat.format(tong);
+		txtTong.setText(tongTien + "Đ");
 	}
 
 	public void xoaMotMon() {
@@ -308,7 +312,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		lblcolorblue = new Color(35, 85, 136);
 		lblcardfont = new Font("Arial", Font.BOLD, 15);
 
-		String giaString = String.valueOf(gia);
+		String giaString = decimalFormat.format(gia);
 		pnlCard = new JPanel();
 		pnlCard.setLayout(new BorderLayout());
 		pnlCard.setBackground(Color.white);
@@ -414,10 +418,9 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 
 	private void locTheoLoai() {
 		String loai = cboLoaiNuoc.getSelectedItem().toString().toLowerCase();
-		pnlGridmenu.removeAll(); // Xóa các card cũ
+		pnlGridmenu.removeAll();
 
 		for (Nuoc nuoc : listNuoc.getList()) {
-			// Nếu chọn "Tất cả" thì hiện hết, còn không thì lọc theo loại
 			if (loai.equals("tất cả") || nuoc.getLoai().toLowerCase().contains(loai)) {
 				JPanel pnlCard = createCard(nuoc.getMaNuoc(), nuoc.getTenNuoc(), nuoc.getGia(), nuoc.getLoai(),
 						nuoc.getImg());
@@ -425,7 +428,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 			}
 		}
 
-		pnlGridmenu.revalidate(); // Refresh giao diện
+		pnlGridmenu.revalidate();
 		pnlGridmenu.repaint();
 	}
 
@@ -452,7 +455,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		cboLoaiNuoc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				locTheoLoai(); // Gọi hàm lọc theo loại
+				locTheoLoai();
 			}
 		});
 	}

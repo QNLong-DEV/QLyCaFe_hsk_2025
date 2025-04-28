@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -94,6 +95,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 	private JButton btnTaoDonVangLai;
 	private static String sdtKHVangLai = "xxx";
 	DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	DecimalFormat decimalFormat = new DecimalFormat("###,###");
 
 	public thanhToanGUI() {
 		listKhachHang = khachhangdao.getALLKhachHang();
@@ -258,7 +260,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		txtSdt.setText(sdtKHVangLai);
 		txtTenKH.setText(tenKHVangLai);
 		txtLoaiKH.setText("Vãng lai");
-		txtTong.setText(String.valueOf(tongtien));
+		txtTong.setText(decimalFormat.format(tongtien));
 	}
 
 	public void taoDonHangVangLai() {
@@ -294,7 +296,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 			}
 			txtTenKH.setText(khON.getTenKH());
 			txtLoaiKH.setText(khON.getLoaiKH());
-			txtTong.setText(String.valueOf(tongtien));
+			txtTong.setText(decimalFormat.format(tongtien));
 		} else {
 			int response = JOptionPane.showConfirmDialog(null,
 					"Khách hàng chưa có hội viên! Bạn có muốn tạo hội viên cho khách hàng?", "Xác nhận",
@@ -308,7 +310,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 				txtSdt.setText(khON.getSdt());
 				txtTenKH.setText(khON.getTenKH());
 				txtLoaiKH.setText(khON.getLoaiKH());
-				txtTong.setText(String.valueOf(tongtien));
+				txtTong.setText(decimalFormat.format(tongtien));
 				System.out.println("tạo tài khoản");
 			} else {
 				return;
@@ -346,13 +348,15 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
 					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Tên nước: ")
 							.append(nc.getTenNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
-							.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
-							.append(chiTiet.getThanhTien()).append("Đ\n");
+							.append(", Đơn Giá: ").append(decimalFormat.format(chiTiet.getDonGia()))
+							.append("Đ, Thành Tiền: ").append(decimalFormat.format(chiTiet.getThanhTien()))
+							.append("Đ\n");
 				}
 			}
 		}
 
-		hoaDon.append("\nTổng Tiền: ").append(listChiTietDonHang.tongTien(tenKHVangLai)).append("Đ\n");
+		hoaDon.append("\nTổng Tiền: ").append(decimalFormat.format(listChiTietDonHang.tongTien(tenKHVangLai)))
+				.append("Đ\n");
 		hoaDon.append("--------------------");
 
 		return hoaDon.toString();
@@ -372,10 +376,11 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
 			for (Nuoc nc : listnc.getList()) {
 				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
-					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(" ,Tên nước: ")
+					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Tên nước: ")
 							.append(nc.getTenNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
-							.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
-							.append(chiTiet.getThanhTien()).append("Đ\n");
+							.append(", Đơn Giá: ").append(decimalFormat.format(chiTiet.getDonGia()))
+							.append("Đ, Thành Tiền: ").append(decimalFormat.format(chiTiet.getThanhTien()))
+							.append("Đ\n");
 				}
 			}
 		}
@@ -386,7 +391,8 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 			hoaDon.append("\nGiảm giá: 10%");
 		}
 
-		hoaDon.append("\nTổng Tiền: ").append(listChiTietDonHang.tongTien(dh.getLoaiKH())).append("Đ\n");
+		hoaDon.append("\nTổng Tiền: ").append(decimalFormat.format(listChiTietDonHang.tongTien(dh.getLoaiKH())))
+				.append("Đ\n");
 		hoaDon.append("--------------------");
 
 		return hoaDon.toString();
