@@ -10,6 +10,7 @@ import org.jfree.data.category.*;
 public class ThongKeDoanhThuGUI extends JPanel {
 	private JComboBox<String> cboLoaiThongKe;
 	private ChartPanel chartPanel;
+	private Paint backgroundColor;
 
 	public ThongKeDoanhThuGUI() {
 		setSize(800, 600);
@@ -60,21 +61,78 @@ public class ThongKeDoanhThuGUI extends JPanel {
 		dataset.addValue(1200000, "Doanh thu", "01/04");
 		dataset.addValue(1800000, "Doanh thu", "02/04");
 		dataset.addValue(1500000, "Doanh thu", "03/04");
-		return ChartFactory.createBarChart("Doanh thu theo ngày", "Ngày", "VNĐ", dataset);
+//		return ChartFactory.createBarChart("Doanh thu theo ngày", "Ngày", "VNĐ", dataset);
+		
+		// Tạo biểu đồ
+	    JFreeChart chart = ChartFactory.createBarChart("Doanh thu theo ngày", "Ngày", "VNĐ", dataset);
+	    
+	    Font titleFont = new Font("Arial", Font.BOLD, 30);
+	    chart.getTitle().setFont(titleFont);
+
+	    // Thay đổi màu nền cho biểu đồ
+	    chart.setBackgroundPaint(Color.LIGHT_GRAY); // Màu nền của biểu đồ
+	    
+	    // Thay đổi màu chữ cho tiêu đề
+	    chart.getTitle().setPaint(Color.WHITE); // Màu chữ tiêu đề
+	    
+	    // Thay đổi màu chữ cho trục X và Y
+	    CategoryPlot plot = (CategoryPlot) chart.getPlot();
+	    plot.getDomainAxis().setLabelPaint(Color.RED); // Màu chữ trục X
+	    plot.getRangeAxis().setLabelPaint(Color.RED); // Màu chữ trục Y
+
+	    return chart;
 	}
 
 	private JFreeChart createDoanhThuTheoThangChart() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		dataset.addValue(25000000, "Doanh thu", "Tháng 1");
 		dataset.addValue(30000000, "Doanh thu", "Tháng 2");
-		return ChartFactory.createBarChart("Doanh thu theo tháng", "Tháng", "VNĐ", dataset);
+//		return ChartFactory.createBarChart("Doanh thu theo tháng", "Tháng", "VNĐ", dataset);
+		
+		// Tạo biểu đồ
+	    JFreeChart chart = ChartFactory.createBarChart("Doanh thu theo tháng", "Tháng", "VNĐ", dataset);
+
+	    Font titleFont = new Font("Arial", Font.BOLD, 30);
+	    chart.getTitle().setFont(titleFont);
+	    
+	    // Thay đổi màu nền cho biểu đồ
+	    chart.setBackgroundPaint(Color.LIGHT_GRAY); // Màu nền của biểu đồ
+	    
+	    // Thay đổi màu chữ cho tiêu đề
+	    chart.getTitle().setPaint(Color.WHITE); // Màu chữ tiêu đề
+	    
+	    // Thay đổi màu chữ cho trục X và Y
+	    CategoryPlot plot = (CategoryPlot) chart.getPlot();
+	    plot.getDomainAxis().setLabelPaint(Color.RED); // Màu chữ trục X
+	    plot.getRangeAxis().setLabelPaint(Color.RED); // Màu chữ trục Y
+	    
+	    return chart;
 	}
 
 	private JFreeChart createDoanhThuTheoNamChart() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		dataset.addValue(350000000, "Doanh thu", "2022");
 		dataset.addValue(420000000, "Doanh thu", "2023");
-		return ChartFactory.createBarChart("Doanh thu theo năm", "Năm", "VNĐ", dataset);
+//		return ChartFactory.createBarChart("Doanh thu theo năm", "Năm", "VNĐ", dataset);
+		
+		// Tạo biểu đồ
+	    JFreeChart chart = ChartFactory.createBarChart("Doanh thu theo năm", "Năm", "VNĐ", dataset);
+
+	    Font titleFont = new Font("Arial", Font.BOLD, 30);
+	    chart.getTitle().setFont(titleFont);
+	    
+	    // Thay đổi màu nền cho biểu đồ
+	    chart.setBackgroundPaint(Color.LIGHT_GRAY); // Màu nền của biểu đồ
+	    
+	    // Thay đổi màu chữ cho tiêu đề
+	    chart.getTitle().setPaint(Color.WHITE); // Màu chữ tiêu đề
+	    
+	    // Thay đổi màu chữ cho trục X và Y
+	    CategoryPlot plot = (CategoryPlot) chart.getPlot();
+	    plot.getDomainAxis().setLabelPaint(Color.RED); // Màu chữ trục X
+	    plot.getRangeAxis().setLabelPaint(Color.RED); // Màu chữ trục Y
+	    
+	    return chart;
 	}
 
 	public static void main(String[] args) {

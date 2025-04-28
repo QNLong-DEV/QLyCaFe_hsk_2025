@@ -73,4 +73,12 @@ public class DanhSachNuoc {
 		return false;
 	}
 
+	public String timTenNuocTheoMa(String maNuoc) {
+		for (Nuoc n : list) {
+			if (n.getMaNuoc().equalsIgnoreCase(maNuoc)) {
+				return n.getTenNuoc();
+			}
+		}
+		return null;
+	}
 }

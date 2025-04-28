@@ -11,7 +11,7 @@ public class connectiondb {
 			// Tải driver JDBC
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			
-			String url = "jdbc:sqlserver://LAPTOP-Q3GN8B9U:1433;databaseName=qlyCaFe;encrypt=true;trustServerCertificate=true;";
+			String url = "jdbc:sqlserver://localhost:1433;databaseName=qlyCaFe;encrypt=true;trustServerCertificate=true;";
 			String userName = "sa";
 			String passWord = "sapassword";
 			
