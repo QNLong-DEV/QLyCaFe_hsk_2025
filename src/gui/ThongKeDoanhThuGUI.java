@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,6 +66,7 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 	private JSplitPane allSplitPane;
 	private static ThongKeDoanhThuGUI instance;
 	DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	DecimalFormat decimalFormat = new DecimalFormat("###,###");
 
 	public static ThongKeDoanhThuGUI getInstance() {
 		return instance;
@@ -195,14 +197,17 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 			String time = baoCao.getThoiGian();
 			double dThu = baoCao.getDoanhThu();
 			int tongDon = baoCao.getTongSoDon();
+			String dthuString = decimalFormat.format(dThu);
 			if (itemselected.equalsIgnoreCase("Ngày")) {
 				LocalDate date = LocalDate.parse(time);
 				String formattedDate = date.format(outputFormat);
 				duLieuCot.addValue(dThu, "Doanh thu", time);
-				tblChartModel.addRow(new Object[] { formattedDate, dThu, tongDon });
+				tblChartModel.addRow(new Object[] { formattedDate, dthuString, tongDon });
+			} else {
+				duLieuCot.addValue(dThu, "Doanh thu", time);
+				tblChartModel.addRow(new Object[] { time, dthuString, tongDon });
 			}
-			duLieuCot.addValue(dThu, "Doanh thu", time);
-			tblChartModel.addRow(new Object[] { time, dThu, tongDon });
+
 		}
 
 		JFreeChart chart = ChartFactory.createBarChart(chartTitle, "Thời gian", "VNĐ", duLieuCot);
@@ -217,8 +222,8 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 		BaoCaoDAO dao = new BaoCaoDAO();
 		BaoCaoBestSeller bc = dao.getBestseller(itemselected);
 
-		tblBestSellerModel.addRow(new Object[] { bc.getMaNuoc(), bc.getTenNuoc(), bc.getGia(), bc.getLoai(),
-				bc.getTongSoLuongDat(), bc.getThang(), bc.getNam() });
+		tblBestSellerModel.addRow(new Object[] { bc.getMaNuoc(), bc.getTenNuoc(), decimalFormat.format(bc.getGia()),
+				bc.getLoai(), bc.getTongSoLuongDat(), bc.getThang(), bc.getNam() });
 
 	}
 
@@ -238,7 +243,7 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 			ds = dhdao.getDonHang(khON.getMaKH());
 			for (DonHang dh : ds.getList()) {
 				tblTongDonHangModel.addRow(new Object[] { dh.getMaDH(), dh.getMaKH(), dh.getMaNV(), dh.getLoaiKH(),
-						outputFormat.format(dh.getNgayDatHang()), dh.getTongTien() });
+						outputFormat.format(dh.getNgayDatHang()), decimalFormat.format(dh.getTongTien()) });
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng");
