@@ -54,8 +54,8 @@ public class taoTaiKhoanKHGUI extends JDialog implements ActionListener {
 		setTitle("Đăng ký hội viên");
 		setSize(400, 200);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); 
-		
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
 		LookAndFeelConfig.applyLookAndFeel();
 
 		pnlNorth = new JPanel();
@@ -144,9 +144,5 @@ public class taoTaiKhoanKHGUI extends JDialog implements ActionListener {
 		}
 
 	}
-
-//	public static void main(String[] args) {
-//		new taoTaiKhoanKHGUI();
-//	}
 
 }

@@ -2,8 +2,12 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.LocalDateTime;
 
 import connection.connectiondb;
+import controller.DanhSachChiTietDonHang;
+import controller.DanhSachDonHang;
 import model.DonHang;
 
 public class DonHangDAO {
@@ -32,5 +36,39 @@ public class DonHangDAO {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public DanhSachDonHang getDonHang(String makh) {
+		DanhSachDonHang ds = new DanhSachDonHang();
+		try {
+			con = connectiondb.getConnection();
+
+			String sql = "SELECT MaDH, MaKH, MaNV, LoaiKH, NgayDatHang, TongTien FROM DonHang WHERE MaKH = ?";
+			PreparedStatement pst = con.prepareStatement(sql);
+			pst.setString(1, makh);
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				String maDH = rs.getString("MaDH");
+				String maKH = rs.getString("MaKH");
+				String maNV = rs.getString("MaNV");
+				String loaiKH = rs.getString("LoaiKH");
+				LocalDateTime ngayDatHang = rs.getTimestamp("NgayDatHang").toLocalDateTime();
+				double tongTien = rs.getDouble("TongTien");
+				ChiTietDonHangDAO ctdao = new ChiTietDonHangDAO();
+				DanhSachChiTietDonHang dsct = new DanhSachChiTietDonHang();
+				dsct = ctdao.getChiTietDonHang(maDH);
+				DonHang dh = new DonHang(maDH, maKH, maNV, loaiKH, ngayDatHang, dsct, dsct.tongTien(loaiKH));
+				ds.themDH(dh);
+			}
+			rs.close();
+			pst.close();
+			return ds;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connectiondb.closeConnection(con);
+		}
+		return null;
 	}
 }

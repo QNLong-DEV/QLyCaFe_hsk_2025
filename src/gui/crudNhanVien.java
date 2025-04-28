@@ -60,18 +60,37 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	txtSource txtHelper = new txtSource();
 	static DanhSachNhanVien list = new DanhSachNhanVien();
 	NhanVienDAO dao = new NhanVienDAO();
+	NhanVien nvON;
+	private JPanel pnlCenter;
+	private JLabel lblma;
+	private JLabel lblten;
+	private JLabel lblsdt;
+	private JLabel lblngaysinh;
+	private JLabel lblemail;
+	private JLabel lblmatkhau;
+	private JTextField txtten;
+	private JTextField txtma;
+	private JTextField txtsdt;
+	private JTextField txtngaysinh;
+	private JTextField txtemail;
+	private JTextField txtmatkhau;
+	private Box Box4;
+	private Box Box5;
+	private Box Box6;
+	private Dimension txtSizeShowInFor;
 
-	public crudNhanVien() {
+	public crudNhanVien(String manv) {
 		this.setSize(800, 600);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 
 		LookAndFeelConfig.applyLookAndFeel();
+		nvON = dao.getNhanVienByMaNV(manv);
 
 		pnlNorth = new JPanel();
 		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
 		this.add(pnlNorth, BorderLayout.NORTH);
-		lblTitle = new JLabel("Danh sách nhân viên");
+		lblTitle = new JLabel("Thông tin nhân viên");
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 25)); // Đặt font và cỡ chữ
 		lblTitle.setForeground(Color.BLUE); // Đặt màu chữ
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
@@ -148,14 +167,77 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		pnlNorth.add(Box3);
 		pnlNorth.add(Box.createVerticalStrut(10));
 
-		Object[] colsTable = { "Mã NV", "Họ tên", "SDT", "Ngày sinh", "Email", "Mật khẩu" };
-		tblModel = new DefaultTableModel(colsTable, 0);
-		tbl = new JTable();
-		tbl.setModel(tblModel);
-		scrollTable = new JScrollPane(tbl);
-		tbl.setDefaultEditor(Object.class, null);
-		this.add(scrollTable, BorderLayout.CENTER);
+		pnlCenter = new JPanel();
+		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
+		this.add(pnlCenter,BorderLayout.CENTER);
+		lblma = new JLabel("Mã nhân viên:");
+		lblten = new JLabel("Tên nhân viên:");
+		lblsdt = new JLabel("SDT nhân viên:");
+		lblngaysinh = new JLabel("Ngày sinh nhân viên:");
+		lblemail = new JLabel("Email nhân viên:");
+		lblmatkhau = new JLabel("Mật khẩu nhân viên:");
+		
+		lblma.setPreferredSize(lblSize);
+		lblten.setPreferredSize(lblSize);
+		lblsdt.setPreferredSize(lblSize);
+		lblngaysinh.setPreferredSize(lblSize);
+		lblemail.setPreferredSize(lblSize);
+		lblmatkhau.setPreferredSize(lblSize);
 
+		txtma = new JTextField(10);
+		txtten = new JTextField(10);
+		txtsdt = new JTextField(10);
+		txtngaysinh = new JTextField(10);
+		txtemail = new JTextField(10);
+		txtmatkhau = new JTextField(10);
+		
+		txtSizeShowInFor = new Dimension(200,25);
+		txtma.setMaximumSize(txtSizeShowInFor);
+		txtten.setMaximumSize(txtSizeShowInFor);
+		txtsdt.setMaximumSize(txtSizeShowInFor);
+		txtngaysinh.setMaximumSize(txtSizeShowInFor);
+		txtemail.setMaximumSize(txtSizeShowInFor);
+		txtmatkhau.setMaximumSize(txtSizeShowInFor);
+
+		Box4 = new Box(BoxLayout.X_AXIS);
+		Box4.setMaximumSize(new Dimension(getWidth(),30));
+		Box5 = new Box(BoxLayout.X_AXIS);
+		Box5.setMaximumSize(new Dimension(getWidth(),30));
+		Box6 = new Box(BoxLayout.X_AXIS);
+		Box6.setMaximumSize(new Dimension(getWidth(),30));
+
+		Box4.add(lblma);
+		Box4.add(Box.createHorizontalStrut(10));
+		Box4.add(txtma);
+		Box4.add(Box.createHorizontalStrut(10));
+		Box4.add(lblten);
+		Box4.add(Box.createHorizontalStrut(10));
+		Box4.add(txtten);
+
+		Box5.add(lblsdt);
+		Box5.add(Box.createHorizontalStrut(10));
+		Box5.add(txtsdt);
+		Box5.add(Box.createHorizontalStrut(10));
+		Box5.add(lblngaysinh);
+		Box5.add(Box.createHorizontalStrut(10));
+		Box5.add(txtngaysinh);
+
+		Box6.add(lblemail);
+		Box6.add(Box.createHorizontalStrut(10));
+		Box6.add(txtemail);
+		Box6.add(Box.createHorizontalStrut(10));
+		Box6.add(lblmatkhau);
+		Box6.add(Box.createHorizontalStrut(10));
+		Box6.add(txtmatkhau);
+
+		pnlCenter.add(Box.createVerticalStrut(100));
+		pnlCenter.add(Box4);
+		pnlCenter.add(Box.createVerticalStrut(10));
+		pnlCenter.add(Box5);
+		pnlCenter.add(Box.createVerticalStrut(10));
+		pnlCenter.add(Box6);
+		pnlCenter.add(Box.createVerticalStrut(10));
+		
 		btnThem = new JButton("Thêm");
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
@@ -180,26 +262,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		btnThem.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnSua.addActionListener(this);
-		loadDSLenTable();
-	}
-
-	public void loadDSLenTable() {
-		list = dao.layDanhSachNhanVien();
-		if (list == null) {
-			JOptionPane.showMessageDialog(null, "Lấy danh sách nhân viên không thành công");
-			return;
-		}
-
-		for (NhanVien nv : list.getList()) {
-			Object[] row = new Object[6];
-			row[0] = nv.getMaNV();
-			row[1] = nv.getTenNV();
-			row[2] = nv.getSdt();
-			row[3] = nv.getNgaysinh();
-			row[4] = nv.getEmail();
-			row[5] = nv.getMatkhau();
-			tblModel.addRow(row); // Thêm dòng vào bảng
-		}
+//		loadDSLenTable();
 	}
 
 	public void themNhanVien() {
@@ -250,49 +313,10 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		}
 
 		NhanVien nvNew = new NhanVien(manv, tennv, sdt, dateBorn, email, matKhau);
-		try {
-
-			list.addList(nvNew);
-			Object[] row = new Object[6];
-			row[0] = nvNew.getMaNV();
-			row[1] = nvNew.getTenNV();
-			row[2] = nvNew.getSdt();
-			row[3] = nvNew.getNgaysinh();
-			row[4] = nvNew.getEmail();
-			row[5] = nvNew.getMatkhau();
-			tblModel.addRow(row);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Lỗi không thêm được dữ liệu");
-		}
 		if (!dao.themNhanVienVaodb(nvNew)) {
 			JOptionPane.showConfirmDialog(null, "Dữ liệu lỗi không thể thêm vào database");
 			return;
 		}
-	}
-
-	public void xoaNhanVien() {
-		int rowSelected = tbl.getSelectedRow();
-		String manv = tbl.getValueAt(rowSelected, 0).toString();
-		if (rowSelected != -1) {
-			int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa nhân viên "+manv+" không?",
-					"Xác nhận xóa", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (confirm == JOptionPane.YES_OPTION) {
-				tblModel.removeRow(rowSelected);
-				if (!list.removeNV(manv)) {
-					JOptionPane.showMessageDialog(null, "lỗi không tìm thấy nhân viên trong list");
-					return;
-				}
-				if (!dao.xoaNhanVienKhoidb(manv)) {
-					JOptionPane.showMessageDialog(null, "lỗi không tìm thấy nhân viên trong database");
-					return;
-				}
-				JOptionPane.showMessageDialog(null, "Xóa thành công nhân viên có mã là: " + manv);
-			}
-		} else {
-			JOptionPane.showMessageDialog(null, "Bạn chưa chọn nhân viên để xóa");
-			return;
-		}
-
 	}
 
 	@Override
@@ -300,7 +324,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		if (e.getSource() == btnThem) {
 			themNhanVien();
 		} else if (e.getSource() == btnXoa) {
-			xoaNhanVien();
+
 		}
 
 	}

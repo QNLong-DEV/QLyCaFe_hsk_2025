@@ -56,7 +56,8 @@ public class ChiTietDonHang {
 	public void setThanhTien(double thanhTien) {
 		this.ThanhTien = thanhTien;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "ChiTietDonHang [MaDH=" + MaDH + ", MaNuoc=" + MaNuoc + ", SoLuong=" + SoLuong + ", DonGia=" + DonGia

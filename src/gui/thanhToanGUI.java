@@ -37,6 +37,7 @@ import model.NhanVien;
 import util.LookAndFeelConfig;
 import util.MaDonHangGenerator;
 import util.MaKhachHangGenerator;
+import util.XuatPDF;
 
 public class thanhToanGUI extends JFrame implements ActionListener {
 	private JPanel pnlNorth;
@@ -260,7 +261,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 			chitietdonhangdao.saveChiTietDonHang(ct);
 		}
 		JOptionPane.showMessageDialog(null, "Thanh toán vãng lai thành công!");
-		dh = null;
+
 	}
 
 	public void napThongTinKhachHang(KhachHang kh) {
@@ -314,20 +315,96 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 			chitietdonhangdao.saveChiTietDonHang(ct);
 		}
 		JOptionPane.showMessageDialog(null, "Thanh toán hội viên thành công!");
+	}
+
+	public String xuatHoaDonVangLai() {
+		StringBuilder hoaDon = new StringBuilder();
+
+		hoaDon.append("----- HÓA ĐƠN -----\n");
+		hoaDon.append("Mã Đơn Hàng: ").append(madhvanglai).append("\n");
+		hoaDon.append("Mã Khách Hàng: ").append(maKHVangLai).append("\n");
+		hoaDon.append("Mã Nhân Viên: ").append(nvOn.getMaNV()).append("\n");
+		hoaDon.append("Loại Khách Hàng: ").append("Khách vãng lai").append("\n");
+		hoaDon.append("Ngày Đặt Hàng: ").append(LocalDateTime.now()).append("\n");
+
+		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
+		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
+			hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
+					.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
+					.append(chiTiet.getThanhTien()).append("Đ\n");
+		}
+
+		hoaDon.append("\nTổng Tiền: ").append(listChiTietDonHang.tongTien(tenKHVangLai)).append("Đ\n");
+		hoaDon.append("--------------------");
+
+		return hoaDon.toString();
+	}
+
+	public String xuatHoaDonHoiVien() {
+		StringBuilder hoaDon = new StringBuilder();
+
+		hoaDon.append("----- HÓA ĐƠN -----\n");
+		hoaDon.append("Mã Đơn Hàng: ").append(dh.getMaDH()).append("\n");
+		hoaDon.append("Mã Khách Hàng: ").append(dh.getMaKH()).append("\n");
+		hoaDon.append("Mã Nhân Viên: ").append(dh.getMaNV()).append("\n");
+		hoaDon.append("Loại Khách Hàng: ").append(dh.getLoaiKH()).append("\n");
+		hoaDon.append("Ngày Đặt Hàng: ").append(dh.getNgayDatHang()).append("\n");
+
+		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
+		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
+			hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
+					.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
+					.append(chiTiet.getThanhTien()).append("Đ\n");
+		}
+
+		if (dh.getLoaiKH().equalsIgnoreCase("Tiềm năng")) {
+			hoaDon.append("\nGiảm giá: 5%");
+		} else if (dh.getLoaiKH().equalsIgnoreCase("Thân thiết")) {
+			hoaDon.append("\nGiảm giá: 10%");
+		}
+
+		hoaDon.append("\nTổng Tiền: ").append(listChiTietDonHang.tongTien(dh.getLoaiKH())).append("Đ\n");
+		hoaDon.append("--------------------");
+
+		return hoaDon.toString();
+	}
+
+	public void xoaTrang() {
 		khON = null;
 		dh = null;
+		madhvanglai = "";
+		tenKHVangLai = "";
+		maKHVangLai = "";
+		tblModel.setRowCount(0);
+		txtSdt.setText("");
+		txtLoaiKH.setText("");
+		txtTenKH.setText("");
+		txtTong.setText("");
+		this.dispose();
 	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnXacNhan) {
-			if (khON == null) {
-				taoDonHangVangLai();
+			if (txtSdt.getText().trim().isEmpty() || txtMaNV == null) {
+				JOptionPane.showMessageDialog(null, "Chưa nhập số điện thoại khách hàng");
+				return;
 			} else {
-				taoDonHangHoiVien();
+				if (khON == null) {
+					taoDonHangVangLai();
+					System.out.println(xuatHoaDonVangLai());
+					new XuatPDF().xuatHoaDonPDF(xuatHoaDonVangLai(), "hoadonvanglai");
+					xoaTrang();
+				} else {
+					taoDonHangHoiVien();
+					System.out.println(xuatHoaDonHoiVien());
+					new XuatPDF().xuatHoaDonPDF(xuatHoaDonHoiVien(), "hoadonhoivien");
+					xoaTrang();
+				}
 			}
 		} else if (e.getSource() == btnHuyDon) {
-
+			xoaTrang();
 		} else if (e.getSource() == btnTim) {
 			napThongTinDonHang();
 		} else if (e.getSource() == btnTaoDonVangLai) {

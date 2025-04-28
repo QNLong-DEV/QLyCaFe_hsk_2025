@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -7,12 +8,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -20,6 +26,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,6 +35,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.DanhSachChiTietDonHang;
@@ -42,8 +51,9 @@ import model.NhanVien;
 import model.Nuoc;
 import util.LookAndFeelConfig;
 import util.MaDonHangGenerator;
+import util.txtSource;
 
-public class MenuNuocGUI extends JPanel implements ActionListener {
+public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListener {
 
 	private JLabel lblTitle;
 	private JButton btnThanhToan;
@@ -58,6 +68,8 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	private JScrollPane scrollTable;
 	private JPanel pnlGridmenu;
 	private JScrollPane scrollPane;
+	private txtSource txtHelper = new txtSource();
+	private ArrayList<JPanel> danhSachCard = new ArrayList<>();
 	static DanhSachNuoc listNuoc = new DanhSachNuoc();
 	NuocDAO Nuocdao = new NuocDAO();
 	static DanhSachChiTietDonHang listChiTietDonHang = new DanhSachChiTietDonHang();
@@ -69,7 +81,6 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	private JLabel lblgiaCard;
 	private JLabel lblloaiCard;
 	private JButton btnChon;
-	private JPanel pnlSouthCard;
 	private Box CBox0;
 	private Box CBox1;
 	private Box CBox2;
@@ -81,15 +92,39 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 	private JButton btnXoaTrang;
 	private thanhToanGUI thanhtoanWindow = null;
 	static MaDonHangGenerator genMa = new MaDonHangGenerator();
-	private String MaDH = genMa.taoMaDH("A001");
 	private NhanVien nvOn;
+	private JLabel lblTimNuoc;
+	private JTextField txtTimNuoc;
+	private JComboBox cboLoaiNuoc;
+	private Font txtFont;
+	private JPanel pnlCardEast;
+	private Color lblcolorblue;
+	private Font lblcardfont;
 
 	public MenuNuocGUI(String manv) {
 		setLayout(new BorderLayout());
 		LookAndFeelConfig.applyLookAndFeel();
+
+		JPanel pnlNorth = new JPanel(new BorderLayout());
+		pnlNorth.setBackground(new Color(35, 85, 136));
 		lblTitle = new JLabel("Menu Nước", SwingConstants.CENTER);
-		lblTitle.setFont(new Font("arial", Font.BOLD, 30));
-		this.add(lblTitle, BorderLayout.NORTH);
+		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTitle.setForeground(Color.white);
+		pnlNorth.add(lblTitle, BorderLayout.CENTER);
+		JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		lblTimNuoc = new JLabel("Tìm nước:");
+		lblTimNuoc.setForeground(Color.white);
+		txtTimNuoc = new JTextField(10);
+		pnlSearch.add(lblTimNuoc);
+		pnlSearch.add(txtTimNuoc);
+		pnlSearch.setForeground(Color.white);
+		pnlSearch.setBackground(new Color(35, 85, 136));
+		String[] loaiNuoc = { "Tất cả", "Trà sữa", "Cà phê", "Frosty", "Trà trái cây", "Trà xanh" };
+		cboLoaiNuoc = new JComboBox<>(loaiNuoc);
+		pnlSearch.add(cboLoaiNuoc);
+		pnlNorth.add(pnlSearch, BorderLayout.EAST);
+
+		this.add(pnlNorth, BorderLayout.NORTH);
 
 		loadingData();
 		listNhanVien = NhanViendao.layDanhSachNhanVien();
@@ -111,16 +146,16 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		btnXoaTrang.setMaximumSize(btnSize);
 
 		pnlGridmenu = new JPanel();
-		pnlGridmenu.setLayout(new GridLayout(0, 5, 30, 30));
-		pnlGridmenu.setPreferredSize(new Dimension(800, 1000));
-
+		pnlGridmenu.setLayout(new GridLayout(0, 3, 30, 30));
 		for (Nuoc nuoc : listNuoc.getList()) {
 			JPanel pnlCard = createCard(nuoc.getMaNuoc(), nuoc.getTenNuoc(), nuoc.getGia(), nuoc.getLoai(),
 					nuoc.getImg());
 			pnlGridmenu.add(pnlCard);
+			danhSachCard.add(pnlCard);
 		}
 
 		JScrollPane scrollPane = new JScrollPane(pnlGridmenu);
+		scrollPane.setMaximumSize(new Dimension(400, 600));
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(50); // tăng tốc độ lăn chuột
 
@@ -129,18 +164,17 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		tblModel = new DefaultTableModel(colsTable, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return false; // Tắt chỉnh sửa cho tất cả các ô
+				return false;
 			}
 		};
 		tbl = new JTable(tblModel);
 		scrollTable = new JScrollPane(tbl);
-
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPane, scrollTable);
-		splitPane.setResizeWeight(0.6); // tỉ lệ phân chia chiều cao: 60% cho trên, 40% cho dưới
-
+		splitPane.setResizeWeight(0.6);
 		this.add(splitPane, BorderLayout.CENTER);
 
 		pnlWest = new JPanel();
+		pnlWest.setBackground(new Color(35, 85, 136));
 		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
 		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnThanhToan);
@@ -158,8 +192,10 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		this.add(pnlWest, BorderLayout.WEST);
 
 		pnlSouth = new JPanel();
+		pnlSouth.setBackground(new Color(35, 85, 136));
 		lblTong = new JLabel("Tổng hóa đơn:");
 		lblTong.setFont(new Font("Arial", Font.BOLD, 30));
+		lblTong.setForeground(Color.white);
 		txtTong = new JTextField(50);
 		txtTong.setMaximumSize(new Dimension(150, 50));
 		txtTong.setEditable(false);
@@ -174,6 +210,12 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		btnTang.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnThanhToan.addActionListener(this);
+		cboLoaiNuoc.addActionListener(this);
+		autoSearch();
+		loc();
+		pnlGridmenu.revalidate(); // Cập nhật lại layout
+		pnlGridmenu.repaint(); // Vẽ lại giao diện
+
 	}
 
 	public void loadingData() {
@@ -259,45 +301,60 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		tblModel.removeRow(selectedRow);
 	}
 
+	public String autoXuongDong(String ten) {
+		String res = "";
+		String[] words = ten.split(" ");
+
+		for (int i = 0; i < words.length; i++) {
+			res += words[i] + " ";
+			if (i == 4) {
+				res += "<br>";
+			}
+		}
+
+		return "<html><div>" + res.trim() + "</div></html>";
+	}
+
 	public JPanel createCard(String ma, String ten, double gia, String loai, String img) {
+		lblcolorblue = new Color(35, 85, 136);
+		lblcardfont = new Font("Arial", Font.BOLD, 15);
+
 		String giaString = String.valueOf(gia);
-
-		// String imgPath = "D:\\QLyCaFe_hsk_2025\\src\\img\\trasua1.jpg";
-
 		pnlCard = new JPanel();
 		pnlCard.setLayout(new BorderLayout());
-		pnlCard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		pnlCard.setPreferredSize(new Dimension(200, 300));
+		pnlCard.setBackground(Color.white);
 
-		ImageIcon icon = new ImageIcon("src/img/trasua1.jpg");
+		ImageIcon icon = new ImageIcon("src/img/" + img);
 		Image imgNuoc = icon.getImage();
 		Image scaledImg = imgNuoc.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImg);
 		JLabel lblImg = new JLabel(scaledIcon);
+		pnlCard.add(lblImg, BorderLayout.CENTER);
 
-		pnlCard.add(lblImg, BorderLayout.CENTER); // Gán ảnh vào card
+		lblmaCard = new JLabel(ma);
+		lblmaCard.setPreferredSize(new Dimension(150, 30));
+		lblmaCard.setForeground(lblcolorblue);
+		lblmaCard.setFont(lblcardfont);
 
-		lblmaCard = new JLabel("Mã: " + ma);
-		lbltenCard = new JLabel("Tên: " + ten);
-		lblgiaCard = new JLabel("Giá: " + giaString + "Đ");
-		lblloaiCard = new JLabel("Loại: " + loai);
+		lbltenCard = new JLabel(autoXuongDong(ten));
+		lbltenCard.setPreferredSize(new Dimension(150, 30));
+		lbltenCard.setForeground(lblcolorblue);
+		lbltenCard.setFont(lblcardfont);
 
-		lblCardSize = new Dimension(80, 20);
-		lblFont = new Font("Arial", Font.BOLD, 10);
+		lblgiaCard = new JLabel(giaString + "Đ");
+		lblgiaCard.setPreferredSize(new Dimension(150, 30));
+		lblgiaCard.setFont(lblcardfont);
 
-		lblmaCard.setPreferredSize(lblCardSize);
-		lblmaCard.setFont(lblFont);
+		lblloaiCard = new JLabel(loai);
+		lblloaiCard.setPreferredSize(new Dimension(150, 30));
+		lblloaiCard.setFont(lblcardfont);
 
-		lbltenCard.setPreferredSize(lblCardSize);
-		lbltenCard.setFont(lblFont);
+		lblmaCard.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		lbltenCard.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		lblgiaCard.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		lblloaiCard.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		lblgiaCard.setPreferredSize(lblCardSize);
-		lblgiaCard.setFont(lblFont);
-
-		lblloaiCard.setPreferredSize(lblCardSize);
-		lblloaiCard.setFont(lblFont);
-
-		btnChon = new JButton("Chọn món");
+		btnChon = new JButton("Chọn");
 		btnChon.setPreferredSize(new Dimension(120, 40));
 		btnChon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -306,28 +363,21 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 			setTongTien();
 		});
 
-		pnlSouthCard = new JPanel();
-		pnlSouthCard.setLayout(new BoxLayout(pnlSouthCard, BoxLayout.Y_AXIS));
-
-		CBox0 = new Box(BoxLayout.X_AXIS);
-		CBox1 = new Box(BoxLayout.X_AXIS);
-		CBox2 = new Box(BoxLayout.X_AXIS);
-
-		CBox0.add(lblmaCard);
-		CBox0.add(Box.createHorizontalStrut(10));
-		CBox0.add(lbltenCard);
-		CBox1.add(lblgiaCard);
-		CBox1.add(Box.createHorizontalStrut(10));
-		CBox1.add(lblloaiCard);
-		CBox2.add(btnChon);
-		pnlSouthCard.add(CBox0);
-		pnlSouthCard.add(CBox1);
-		pnlSouthCard.add(CBox2);
-		pnlCard.add(pnlSouthCard, BorderLayout.SOUTH);
+		pnlCardEast = new JPanel();
+		pnlCardEast.setLayout(new BoxLayout(pnlCardEast, BoxLayout.Y_AXIS));
+		pnlCardEast.setBackground(Color.white);
+		pnlCardEast.add(lblmaCard);
+		pnlCardEast.add(Box.createVerticalStrut(5));
+		pnlCardEast.add(lbltenCard);
+		pnlCardEast.add(Box.createVerticalStrut(5));
+		pnlCardEast.add(lblgiaCard);
+		pnlCardEast.add(Box.createVerticalStrut(5));
+		pnlCardEast.add(lblloaiCard);
+		pnlCard.add(pnlCardEast, BorderLayout.EAST);
+		pnlCard.add(btnChon,BorderLayout.SOUTH);
 		return pnlCard;
 	}
 
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnGiam) {
@@ -351,11 +401,89 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 					thanhtoanWindow = new thanhToanGUI();
 				}
 				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn);
-				//thanhtoanWindow.setTongTienThanhToan(txtTong.getText());
 				thanhtoanWindow.visibleTrue();
-			}	
-			
+			}
+
 		}
+	}
+
+	private void timKiemNuoc() {
+		String tuKhoa = txtTimNuoc.getText().toLowerCase().trim();
+		pnlGridmenu.removeAll();
+
+		for (Nuoc nuoc : listNuoc.getList()) {
+			if (nuoc.getTenNuoc().toLowerCase().contains(tuKhoa)) {
+				JPanel pnlCard = createCard(nuoc.getMaNuoc(), nuoc.getTenNuoc(), nuoc.getGia(), nuoc.getLoai(),
+						nuoc.getImg());
+				pnlGridmenu.add(pnlCard);
+			}
+		}
+
+		pnlGridmenu.revalidate();
+		pnlGridmenu.repaint();
+	}
+
+	private void locTheoLoai() {
+		String loai = cboLoaiNuoc.getSelectedItem().toString().toLowerCase();
+		pnlGridmenu.removeAll(); // Xóa các card cũ
+
+		for (Nuoc nuoc : listNuoc.getList()) {
+			// Nếu chọn "Tất cả" thì hiện hết, còn không thì lọc theo loại
+			if (loai.equals("tất cả") || nuoc.getLoai().toLowerCase().contains(loai)) {
+				JPanel pnlCard = createCard(nuoc.getMaNuoc(), nuoc.getTenNuoc(), nuoc.getGia(), nuoc.getLoai(),
+						nuoc.getImg());
+				pnlGridmenu.add(pnlCard);
+			}
+		}
+
+		pnlGridmenu.revalidate(); // Refresh giao diện
+		pnlGridmenu.repaint();
+	}
+
+	public void autoSearch() {
+		txtTimNuoc.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				timKiemNuoc();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				timKiemNuoc();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				timKiemNuoc();
+			}
+		});
+	}
+
+	public void loc() {
+		cboLoaiNuoc.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				locTheoLoai(); // Gọi hàm lọc theo loại
+			}
+		});
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
