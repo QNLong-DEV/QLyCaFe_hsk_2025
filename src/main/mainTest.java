@@ -16,7 +16,7 @@ public class mainTest {
 	private static DanhSachNhanVien listNV;
 
 	public static void main(String[] args) {
-//		new MenuGUI(null)aaaa;
+//		new MenuGUI(null);
 		new dangNhapGUI();
 	}
 }
