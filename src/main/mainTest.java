@@ -18,7 +18,5 @@ public class mainTest {
 	public static void main(String[] args) {
 //		new MenuGUI(null);
 		new dangNhapGUI();
-		
-		
 	}
 }
