@@ -72,8 +72,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
 		this.add(pnlNorth, BorderLayout.NORTH);
 		lblTitle = new JLabel("Danh sách nhân viên");
-		lblTitle.setFont(new Font("Arial", Font.BOLD, 25)); // Đặt font và cỡ chữ
-		lblTitle.setForeground(Color.BLUE); // Đặt màu chữ
+		lblTitle.setFont(new Font("Arial", Font.BOLD, 30)); // Đặt font và cỡ chữ
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
 
 		Box0 = new Box(BoxLayout.X_AXIS);
@@ -110,7 +109,7 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		txtMatkhau = new JTextField(10);
 		txtHelper.addPlaceholder(txtMatkhau, "Đúng định dạng 1 hoa, 1 số, 1 thường");
 
-		Dimension txtSize = new Dimension(120, 25);
+		Dimension txtSize = new Dimension(120, 30);
 		txtMaNV.setPreferredSize(txtSize);
 		txtHotenNV.setPreferredSize(txtSize);
 		txtSdt.setPreferredSize(txtSize);

@@ -3,8 +3,10 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.net.URISyntaxException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +21,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.kitfox.svg.app.beans.SVGIcon;
 
 import dao.NhanVienDAO;
 import model.NhanVien;
@@ -47,11 +50,12 @@ public class dangNhapGUI extends JFrame {
 
 		LookAndFeelConfig.applyLookAndFeel();
 		lblDangNhap = new JLabel("Đăng nhập tài khoản");
-		lblDangNhap.setForeground(Color.blue);
+		lblDangNhap.setFont(new Font("Arial", Font.BOLD, 20));
+		lblDangNhap.setForeground(Color.WHITE);
 		lblDangNhap.setAlignmentX(CENTER_ALIGNMENT);
 		lblSdt = new JLabel("SĐT:");
 		lblMatKhau = new JLabel("Mật khẩu:");
-
+		
 		Dimension lblSize = new Dimension(100, 25);
 		lblSdt.setPreferredSize(lblSize);
 		lblMatKhau.setPreferredSize(lblSize);
@@ -113,7 +117,7 @@ public class dangNhapGUI extends JFrame {
 
 			@Override
 			protected NhanVien doInBackground() throws Exception {
-				Thread.sleep(3000);
+				Thread.sleep(1500);
 
 				NhanVienDAO dao = new NhanVienDAO();
 				return dao.getNhanVienByEmailVaMatKhau(Sdt, matKhau);

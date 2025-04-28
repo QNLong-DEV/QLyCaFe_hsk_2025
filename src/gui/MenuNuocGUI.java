@@ -102,7 +102,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener {
 		btnTang = new JButton("Tăng số lượng");
 		btnXoaTrang = new JButton("Xóa tất cả");
 
-		Dimension btnSize = new Dimension(200, 50);
+		Dimension btnSize = new Dimension(150, 50);
 		btnThanhToan.setMaximumSize(btnSize); // Cài đặt kích thước tối đa
 		btnHuy.setMaximumSize(btnSize);
 		btnXoa.setMaximumSize(btnSize);
