@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import javax.swing.Box;
@@ -23,6 +25,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import controller.DanhSachChiTietDonHang;
@@ -90,6 +93,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 	private String tenKHVangLai;
 	private JButton btnTaoDonVangLai;
 	private static String sdtKHVangLai = "xxx";
+	DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	public thanhToanGUI() {
 		listKhachHang = khachhangdao.getALLKhachHang();
@@ -107,6 +111,9 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		lblTitle = new JLabel("Lập Hóa Đơn Thanh Toán");
 		lblTitle.setForeground(Color.DARK_GRAY);
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 25));
+		lblTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblTitle.getPreferredSize().height));
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		lblsize = new Dimension(150, 25);
 		txtsize = new Dimension(200, 25);
@@ -331,16 +338,16 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		hoaDon.append("Mã Khách Hàng: ").append(maKHVangLai).append("\n");
 		hoaDon.append("Mã Nhân Viên: ").append(nvOn.getMaNV()).append("\n");
 		hoaDon.append("Loại Khách Hàng: ").append("Khách vãng lai").append("\n");
-		hoaDon.append("Ngày Đặt Hàng: ").append(LocalDateTime.now()).append("\n");
+		hoaDon.append("Ngày Đặt Hàng: ").append(outputFormat.format(LocalDateTime.now())).append("\n");
 
 		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
 		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
 			for (Nuoc nc : listnc.getList()) {
 				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
-					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Tên nước: ").append(nc.getTenNuoc())
-							.append(", Số Lượng: ").append(chiTiet.getSoLuong()).append(", Đơn Giá: ")
-							.append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ").append(chiTiet.getThanhTien())
-							.append("Đ\n");
+					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Tên nước: ")
+							.append(nc.getTenNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
+							.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
+							.append(chiTiet.getThanhTien()).append("Đ\n");
 				}
 			}
 		}
@@ -359,16 +366,16 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		hoaDon.append("Mã Khách Hàng: ").append(dh.getMaKH()).append("\n");
 		hoaDon.append("Mã Nhân Viên: ").append(dh.getMaNV()).append("\n");
 		hoaDon.append("Loại Khách Hàng: ").append(dh.getLoaiKH()).append("\n");
-		hoaDon.append("Ngày Đặt Hàng: ").append(dh.getNgayDatHang()).append("\n");
+		hoaDon.append("Ngày Đặt Hàng: ").append(outputFormat.format(dh.getNgayDatHang())).append("\n");
 
 		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
 		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
 			for (Nuoc nc : listnc.getList()) {
 				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
-					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(" ,Tên nước: ").append(nc.getTenNuoc())
-							.append(", Số Lượng: ").append(chiTiet.getSoLuong()).append(", Đơn Giá: ")
-							.append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ").append(chiTiet.getThanhTien())
-							.append("Đ\n");
+					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(" ,Tên nước: ")
+							.append(nc.getTenNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
+							.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
+							.append(chiTiet.getThanhTien()).append("Đ\n");
 				}
 			}
 		}

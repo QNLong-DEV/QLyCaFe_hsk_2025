@@ -120,4 +120,30 @@ public class NhanVienDAO {
 			return false;
 		}
 	}
+
+	public boolean suaNhanVienTheoMa(NhanVien nv) {
+		try (Connection c = connectiondb.getConnection()) {
+			String sql = "UPDATE NhanVien " + "SET TenNV=?, Sdt=?, Ngaysinh=?, Email=?, matKhau=? " + "WHERE MaNV=?";
+
+			PreparedStatement pst = c.prepareStatement(sql);
+
+			pst.setString(1, nv.getTenNV());
+			pst.setString(2, nv.getSdt());
+			pst.setDate(3, java.sql.Date.valueOf(nv.getNgaysinh()));
+			pst.setString(4, nv.getEmail());
+			pst.setString(5, nv.getMatkhau());
+			pst.setString(6, nv.getMaNV());
+
+			int rows = pst.executeUpdate();
+			pst.close();
+
+			System.out.println("\n Cập nhật thông tin nhân viên thành công \n");
+			return rows > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

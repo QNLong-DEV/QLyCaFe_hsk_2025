@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -9,9 +11,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -20,8 +24,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import controller.DanhSachNhanVien;
@@ -32,261 +39,226 @@ import util.txtSource;
 
 public class crudNhanVien extends JPanel implements ActionListener, FocusListener {
 
-	private JPanel pnlNorth;
-	private JLabel lblTitle;
-	private Box Box1;
-	private Box Box2;
-	private Box Box3;
-	private JLabel lblMaNV;
-	private JTextField txtMaNV;
-	private Box Box0;
-	private JLabel lblHotenNV;
-	private JLabel lblSdt;
-	private JLabel lblNgaySinh;
-	private JLabel lblEmail;
-	private JLabel lblMatkhau;
-	private JTextField txtHotenNV;
-	private JTextField txtSdt;
-	private JTextField txtNgaySinh;
-	private JTextField txtEmail;
-	private JTextField txtMatkhau;
-	private DefaultTableModel tblModel;
-	private JTable tbl;
-	private JScrollPane scrollTable;
-	private JButton btnThem;
-	private JButton btnXoa;
-	private JButton btnSua;
-	private JPanel pnlWest;
 	txtSource txtHelper = new txtSource();
 	static DanhSachNhanVien list = new DanhSachNhanVien();
 	NhanVienDAO dao = new NhanVienDAO();
 	NhanVien nvON;
-	private JPanel pnlCenter;
-	private JLabel lblma;
-	private JLabel lblten;
-	private JLabel lblsdt;
-	private JLabel lblngaysinh;
-	private JLabel lblemail;
-	private JLabel lblmatkhau;
-	private JTextField txtten;
-	private JTextField txtma;
-	private JTextField txtsdt;
-	private JTextField txtngaysinh;
-	private JTextField txtemail;
-	private JTextField txtmatkhau;
-	private Box Box4;
-	private Box Box5;
-	private Box Box6;
-	private Dimension txtSizeShowInFor;
+	private JPanel pnlRight;
+	private Font lblFont;
+	private JLabel lblMaNVshow;
+	private JLabel lblTenNVshow;
+	private JLabel lblNgaySinhNVshow;
+	private JLabel lblSdtNVshow;
+	private JLabel lblEmailNVshow;
+	private JPanel pnlLeft;
+	private JLabel lblTenNV;
+	private JTextField txtTenNV;
+	private JLabel lblSdtNV;
+	private JTextField txtSdtNV;
+	private JLabel lblNgaySinhNV;
+	private JTextField txtNgaySinhNV;
+	private JLabel lblEmailNV;
+	private JTextField txtEmailNV;
+	private Box Box0;
+	private Box Box1;
+	private Box Box2;
+	private Box Box3;
+	private JButton btnXoaTrang;
+	private JButton btnSua;
+	private JPanel pnlBtn;
+	private Container mainPanel;
+	static String maNVON;
+	DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private JLabel lblTT;
+	private JLabel lblCNTT;
+	private Box BoxTT;
 
 	public crudNhanVien(String manv) {
-		this.setSize(800, 600);
-		this.setVisible(true);
-		this.setLayout(new BorderLayout());
-
-		LookAndFeelConfig.applyLookAndFeel();
 		nvON = dao.getNhanVienByMaNV(manv);
+		maNVON = manv;
+		pnlRight = new JPanel();
 
-		pnlNorth = new JPanel();
-		pnlNorth.setLayout(new BoxLayout(pnlNorth, BoxLayout.Y_AXIS));
-		this.add(pnlNorth, BorderLayout.NORTH);
-		lblTitle = new JLabel("Thông tin nhân viên");
-		lblTitle.setFont(new Font("Arial", Font.BOLD, 25)); // Đặt font và cỡ chữ
-		lblTitle.setForeground(Color.BLUE); // Đặt màu chữ
-		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
+		pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
+		pnlRight.setBorder(BorderFactory.createDashedBorder(Color.DARK_GRAY));
+		pnlRight.setPreferredSize(new Dimension(700, 300));
+		lblFont = new Font("Arial", Font.BOLD, 20);
+
+		lblTT = new JLabel("Thông tin nhân viên");
+		lblTT.setForeground(new Color(168, 80, 28));
+		lblTT.setFont(new Font("Arial", Font.BOLD, 40));
+		lblTT.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTT.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblTT.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblTT.getPreferredSize().height));
+
+		lblMaNVshow = new JLabel("Mã nhân viên:  " + nvON.getMaNV());
+		lblMaNVshow.setFont(lblFont);
+		lblMaNVshow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMaNVshow.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblMaNVshow.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblMaNVshow.getPreferredSize().height));
+
+		lblTenNVshow = new JLabel("Tên nhân viên:  " + nvON.getTenNV());
+		lblTenNVshow.setFont(lblFont);
+		lblTenNVshow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTenNVshow.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblTenNVshow.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblTenNVshow.getPreferredSize().height));
+
+		lblSdtNVshow = new JLabel("SDT nhân viên:  " + nvON.getSdt());
+		lblSdtNVshow.setFont(lblFont);
+		lblSdtNVshow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSdtNVshow.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblSdtNVshow.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblSdtNVshow.getPreferredSize().height));
+
+		lblNgaySinhNVshow = new JLabel("Ngày sinh nhân viên:  " + outputFormat.format(nvON.getNgaysinh()));
+		lblNgaySinhNVshow.setFont(lblFont);
+		lblNgaySinhNVshow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNgaySinhNVshow.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblNgaySinhNVshow.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblNgaySinhNVshow.getPreferredSize().height));
+
+		lblEmailNVshow = new JLabel("Email nhân viên:  " + nvON.getEmail());
+		lblEmailNVshow.setFont(lblFont);
+		lblEmailNVshow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmailNVshow.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblEmailNVshow.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblEmailNVshow.getPreferredSize().height));
+
+		pnlRight.add(lblTT);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblMaNVshow);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblTenNVshow);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblMaNVshow);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblSdtNVshow);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblEmailNVshow);
+		pnlRight.add(Box.createVerticalStrut(20));
+		pnlRight.add(lblNgaySinhNVshow);
+
+		Font lblFont = new Font("Arial", Font.BOLD, 20);
+
+		pnlLeft = new JPanel();
+		pnlLeft.setLayout(new BoxLayout(pnlLeft, BoxLayout.Y_AXIS));
+		pnlLeft.setPreferredSize(new Dimension(700, 300));
+		Dimension textFieldSize = new Dimension(300, 40);
+
+		lblCNTT = new JLabel("Cập nhật thông tin nhân viên");
+		lblCNTT.setForeground(new Color(168, 80, 28));
+		lblCNTT.setFont(new Font("Arial", Font.BOLD, 30));
+		lblCNTT.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCNTT.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblCNTT.setMaximumSize(new Dimension(Integer.MAX_VALUE, lblCNTT.getPreferredSize().height));
+
+		BoxTT = new Box(BoxLayout.X_AXIS);
+		BoxTT.add(lblCNTT);
+
+		lblTenNV = new JLabel("Tên nhân viên:");
+		lblTenNV.setFont(lblFont);
+		txtTenNV = new JTextField(nvON.getTenNV());
+		txtTenNV.setFont(lblFont);
+		txtTenNV.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+		txtTenNV.setPreferredSize(textFieldSize);
 
 		Box0 = new Box(BoxLayout.X_AXIS);
+		Box0.add(lblTenNV);
+		Box0.add(Box.createHorizontalStrut(20));
+		Box0.add(txtTenNV);
+
+		lblSdtNV = new JLabel("Số điện thoại:");
+		lblSdtNV.setFont(lblFont);
+		txtSdtNV = new JTextField(nvON.getSdt());
+		txtSdtNV.setFont(lblFont);
+		txtSdtNV.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+		txtSdtNV.setPreferredSize(textFieldSize);
+
 		Box1 = new Box(BoxLayout.X_AXIS);
+		Box1.add(lblSdtNV);
+		Box1.add(Box.createHorizontalStrut(20));
+		Box1.add(txtSdtNV);
+
+		lblNgaySinhNV = new JLabel("Ngày sinh:");
+		lblNgaySinhNV.setFont(lblFont);
+		txtNgaySinhNV = new JTextField(outputFormat.format(nvON.getNgaysinh()));
+		txtNgaySinhNV.setFont(lblFont);
+		txtNgaySinhNV.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+		txtNgaySinhNV.setPreferredSize(textFieldSize);
+
 		Box2 = new Box(BoxLayout.X_AXIS);
+		Box2.add(lblNgaySinhNV);
+		Box2.add(Box.createHorizontalStrut(20));
+		Box2.add(txtNgaySinhNV);
+
+		lblEmailNV = new JLabel("Email:");
+		lblEmailNV.setFont(lblFont);
+		txtEmailNV = new JTextField(nvON.getEmail());
+		txtEmailNV.setFont(lblFont);
+		txtEmailNV.setMaximumSize(new Dimension(580, 40));
+
 		Box3 = new Box(BoxLayout.X_AXIS);
+		Box3.add(lblEmailNV);
+		Box3.add(Box.createHorizontalStrut(20));
+		Box3.add(txtEmailNV);
 
-		Box0.add(lblTitle);
-		lblMaNV = new JLabel("Mã nhân viên:");
-		lblHotenNV = new JLabel("Họ tên nhân viên:");
-		lblSdt = new JLabel("Số điện thoại:");
-		lblNgaySinh = new JLabel("Ngày sinh:");
-		lblEmail = new JLabel("Email:");
-		lblMatkhau = new JLabel("Mật khẩu:");
+		btnXoaTrang = new JButton("Xóa trắng");
+		btnSua = new JButton("Sửa thông tin");
 
-		Dimension lblSize = new Dimension(100, 25);
-		lblMaNV.setPreferredSize(lblSize);
-		lblHotenNV.setPreferredSize(lblSize);
-		lblSdt.setPreferredSize(lblSize);
-		lblNgaySinh.setPreferredSize(lblSize);
-		lblEmail.setPreferredSize(lblSize);
-		lblMatkhau.setPreferredSize(lblSize);
+		btnXoaTrang.setMaximumSize(new Dimension(Short.MAX_VALUE, btnXoaTrang.getPreferredSize().height));
+		btnSua.setMaximumSize(new Dimension(Short.MAX_VALUE, btnSua.getPreferredSize().height));
 
-		txtMaNV = new JTextField(10);
-		txtHelper.addPlaceholder(txtMaNV, "Đúng định dạng U001");
-		txtHotenNV = new JTextField(10);
-		txtHelper.addPlaceholder(txtHotenNV, "Không được có số");
-		txtSdt = new JTextField(10);
-		txtHelper.addPlaceholder(txtSdt, "Đúng định dạng 10 số");
-		txtNgaySinh = new JTextField(10);
-		txtHelper.addPlaceholder(txtNgaySinh, "Đúng định dạng dd/mm/yyyy");
-		txtEmail = new JTextField(10);
-		txtHelper.addPlaceholder(txtEmail, "Đúng định dạng user@gmail.com");
-		txtMatkhau = new JTextField(10);
-		txtHelper.addPlaceholder(txtMatkhau, "Đúng định dạng 1 hoa, 1 số, 1 thường");
+		btnXoaTrang.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnSua.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		Dimension txtSize = new Dimension(120, 25);
-		txtMaNV.setPreferredSize(txtSize);
-		txtHotenNV.setPreferredSize(txtSize);
-		txtSdt.setPreferredSize(txtSize);
-		txtNgaySinh.setPreferredSize(txtSize);
-		txtEmail.setPreferredSize(txtSize);
-		txtMatkhau.setPreferredSize(txtSize);
+		pnlBtn = new JPanel();
+		pnlBtn.setLayout(new BoxLayout(pnlBtn, BoxLayout.X_AXIS));
+		pnlBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		pnlBtn.add(btnXoaTrang);
+		pnlBtn.add(Box.createHorizontalStrut(20));
+		pnlBtn.add(btnSua);
 
-		Box1.add(lblMaNV);
-		Box1.add(txtMaNV);
-		Box1.add(Box.createHorizontalStrut(10));
-		Box1.add(lblHotenNV);
-		Box1.add(Box.createHorizontalStrut(10));
-		Box1.add(txtHotenNV);
-
-		Box2.add(lblSdt);
-		Box2.add(txtSdt);
-		Box2.add(Box.createHorizontalStrut(10));
-		Box2.add(lblNgaySinh);
-		Box2.add(Box.createHorizontalStrut(10));
-		Box2.add(txtNgaySinh);
-
-		Box3.add(lblEmail);
-		Box3.add(txtEmail);
-		Box3.add(Box.createHorizontalStrut(10));
-		Box3.add(lblMatkhau);
-		Box3.add(Box.createHorizontalStrut(10));
-		Box3.add(txtMatkhau);
-
-		pnlNorth.add(Box0);
-		pnlNorth.add(Box.createVerticalStrut(10));
-		pnlNorth.add(Box1);
-		pnlNorth.add(Box.createVerticalStrut(10));
-		pnlNorth.add(Box2);
-		pnlNorth.add(Box.createVerticalStrut(10));
-		pnlNorth.add(Box3);
-		pnlNorth.add(Box.createVerticalStrut(10));
-
-		pnlCenter = new JPanel();
-		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
-		this.add(pnlCenter,BorderLayout.CENTER);
-		lblma = new JLabel("Mã nhân viên:");
-		lblten = new JLabel("Tên nhân viên:");
-		lblsdt = new JLabel("SDT nhân viên:");
-		lblngaysinh = new JLabel("Ngày sinh nhân viên:");
-		lblemail = new JLabel("Email nhân viên:");
-		lblmatkhau = new JLabel("Mật khẩu nhân viên:");
 		
-		lblma.setPreferredSize(lblSize);
-		lblten.setPreferredSize(lblSize);
-		lblsdt.setPreferredSize(lblSize);
-		lblngaysinh.setPreferredSize(lblSize);
-		lblemail.setPreferredSize(lblSize);
-		lblmatkhau.setPreferredSize(lblSize);
+		pnlLeft.add(BoxTT);
+		pnlLeft.add(Box.createVerticalStrut(20));
+		pnlLeft.add(Box0);
+		pnlLeft.add(Box.createVerticalStrut(20));
+		pnlLeft.add(Box1);
+		pnlLeft.add(Box.createVerticalStrut(20));
+		pnlLeft.add(Box2);
+		pnlLeft.add(Box.createVerticalStrut(20));
+		pnlLeft.add(Box3);
+		pnlLeft.add(Box.createVerticalStrut(20));
+		pnlLeft.add(pnlBtn);
 
-		txtma = new JTextField(10);
-		txtten = new JTextField(10);
-		txtsdt = new JTextField(10);
-		txtngaysinh = new JTextField(10);
-		txtemail = new JTextField(10);
-		txtmatkhau = new JTextField(10);
-		
-		txtSizeShowInFor = new Dimension(200,25);
-		txtma.setMaximumSize(txtSizeShowInFor);
-		txtten.setMaximumSize(txtSizeShowInFor);
-		txtsdt.setMaximumSize(txtSizeShowInFor);
-		txtngaysinh.setMaximumSize(txtSizeShowInFor);
-		txtemail.setMaximumSize(txtSizeShowInFor);
-		txtmatkhau.setMaximumSize(txtSizeShowInFor);
+		pnlLeft.setMaximumSize(pnlLeft.getPreferredSize());
+		pnlRight.setMaximumSize(pnlRight.getPreferredSize());
 
-		Box4 = new Box(BoxLayout.X_AXIS);
-		Box4.setMaximumSize(new Dimension(getWidth(),30));
-		Box5 = new Box(BoxLayout.X_AXIS);
-		Box5.setMaximumSize(new Dimension(getWidth(),30));
-		Box6 = new Box(BoxLayout.X_AXIS);
-		Box6.setMaximumSize(new Dimension(getWidth(),30));
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+		mainPanel.add(Box.createHorizontalGlue());
+		mainPanel.add(pnlLeft);
+		mainPanel.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa hai panel
+		mainPanel.add(pnlRight);
+		mainPanel.add(Box.createHorizontalGlue());
 
-		Box4.add(lblma);
-		Box4.add(Box.createHorizontalStrut(10));
-		Box4.add(txtma);
-		Box4.add(Box.createHorizontalStrut(10));
-		Box4.add(lblten);
-		Box4.add(Box.createHorizontalStrut(10));
-		Box4.add(txtten);
-
-		Box5.add(lblsdt);
-		Box5.add(Box.createHorizontalStrut(10));
-		Box5.add(txtsdt);
-		Box5.add(Box.createHorizontalStrut(10));
-		Box5.add(lblngaysinh);
-		Box5.add(Box.createHorizontalStrut(10));
-		Box5.add(txtngaysinh);
-
-		Box6.add(lblemail);
-		Box6.add(Box.createHorizontalStrut(10));
-		Box6.add(txtemail);
-		Box6.add(Box.createHorizontalStrut(10));
-		Box6.add(lblmatkhau);
-		Box6.add(Box.createHorizontalStrut(10));
-		Box6.add(txtmatkhau);
-
-		pnlCenter.add(Box.createVerticalStrut(100));
-		pnlCenter.add(Box4);
-		pnlCenter.add(Box.createVerticalStrut(10));
-		pnlCenter.add(Box5);
-		pnlCenter.add(Box.createVerticalStrut(10));
-		pnlCenter.add(Box6);
-		pnlCenter.add(Box.createVerticalStrut(10));
-		
-		btnThem = new JButton("Thêm");
-		btnXoa = new JButton("Xóa");
-		btnSua = new JButton("Sửa");
-
-		Dimension btnSize = new Dimension(200, 50);
-		btnThem.setMaximumSize(btnSize);
-		btnSua.setMaximumSize(btnSize);
-		btnXoa.setMaximumSize(btnSize);
-
-		pnlWest = new JPanel();
-		pnlWest.setPreferredSize(new Dimension(150, 0));
-		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
-		pnlWest.add(Box.createVerticalStrut(30));
-		pnlWest.add(btnThem);
-		pnlWest.add(Box.createVerticalStrut(30));
-		pnlWest.add(btnXoa);
-		pnlWest.add(Box.createVerticalStrut(30));
-		pnlWest.add(btnSua);
-		pnlWest.add(Box.createVerticalStrut(30));
-		this.add(pnlWest, BorderLayout.WEST);
-
-		btnThem.addActionListener(this);
-		btnXoa.addActionListener(this);
 		btnSua.addActionListener(this);
-//		loadDSLenTable();
+		btnXoaTrang.addActionListener(this);
+		setLayout(new BorderLayout());
+		add(mainPanel, BorderLayout.CENTER);
+		setVisible(true);
 	}
 
-	public void themNhanVien() {
-		String manv = txtMaNV.getText();
-		String tennv = txtHotenNV.getText();
-		String sdt = txtSdt.getText();
-		String ngaySinh = txtNgaySinh.getText();
-		String email = txtEmail.getText();
-		String matKhau = txtMatkhau.getText();
+	public void suaThongTinNhanVien() {
+		String tennv = txtTenNV.getText();
+		String sdt = txtSdtNV.getText();
+		String ngaySinh = txtNgaySinhNV.getText();
+		String email = txtEmailNV.getText();
 
 		String ngaySinhRegex = "\\d{2}/\\d{2}/\\d{4}";
 		if ((ngaySinh == null) || !ngaySinh.matches(ngaySinhRegex)) {
-			JOptionPane.showMessageDialog(null, "Ngày sinh không được rỗng, phải đúng định dạng");
+			JOptionPane.showMessageDialog(null, "Ngày sinh không được rỗng, phải đúng định dạng dd/mm/yyyy");
 			return;
 		}
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate dateBorn = LocalDate.parse(ngaySinh, formatter);
-
-		String manvRegex = "NV\\d{3}";
-		if (!list.checktrungma(manv) || manv == null || !manv.matches(manvRegex)) {
-			JOptionPane.showMessageDialog(null, "Không được trùng mã, không được rỗng, phải đúng định dạng");
-			return;
-		}
 
 		String hoTenRegex = "^[\\p{L}\\p{M}\\s]+$";
 		if ((tennv == null) || !tennv.matches(hoTenRegex)) {
@@ -306,25 +278,41 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 			return;
 		}
 
-		String matkhauRegex = "";
-		if (matKhau == null) {
-			JOptionPane.showMessageDialog(null, "Mật khẩu không được rỗng, phải đúng định dạng");
+		
+		NhanVien nvNew = new NhanVien(nvON.getMaNV(), tennv, sdt, dateBorn, email, nvON.getMatkhau());
+		if (!dao.suaNhanVienTheoMa(nvNew)) {
+			JOptionPane.showConfirmDialog(null, "Dữ liệu lỗi không thể sửa nhân viên");
 			return;
+		} else {
+			JOptionPane.showMessageDialog(null, "Sửa thông tin thành công!");
 		}
+	}
 
-		NhanVien nvNew = new NhanVien(manv, tennv, sdt, dateBorn, email, matKhau);
-		if (!dao.themNhanVienVaodb(nvNew)) {
-			JOptionPane.showConfirmDialog(null, "Dữ liệu lỗi không thể thêm vào database");
-			return;
-		}
+	public void loadLaiThongTinNhanVien() {
+		lblMaNVshow.setText(nvON.getMaNV());
+		lblTenNVshow.setText(nvON.getTenNV());
+		lblNgaySinhNVshow.setText(nvON.getNgaysinh().toString());
+		lblSdtNVshow.setText(nvON.getSdt());
+		lblEmailNVshow.setText(nvON.getEmail());
+	}
+
+	public void xoaTrang() {
+		txtTenNV.setText("");
+		txtSdtNV.setText("");
+		txtNgaySinhNV.setText("");
+		txtEmailNV.setText("");
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnThem) {
-			themNhanVien();
-		} else if (e.getSource() == btnXoa) {
+		if (e.getSource() == btnSua) {
+			suaThongTinNhanVien();
+			nvON = dao.getNhanVienByMaNV(maNVON);
+			loadLaiThongTinNhanVien();
 
+		} else if (e.getSource() == btnXoaTrang) {
+			xoaTrang();
 		}
 
 	}

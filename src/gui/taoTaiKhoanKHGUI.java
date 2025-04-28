@@ -122,6 +122,16 @@ public class taoTaiKhoanKHGUI extends JDialog implements ActionListener {
 		String loai = "Tiềm năng";
 		LocalDateTime ngaytao = LocalDateTime.now();
 
+		String sdtRegex = "0[3589]\\d{8}";
+		if ((sdt == null) || !sdt.matches(sdtRegex)) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng, phải đúng định dạng");
+			return;
+		}
+		String hoTenRegex = "^[\\p{L}\\p{M}\\s]+$";
+		if ((ten == null) || !ten.matches(hoTenRegex)) {
+			JOptionPane.showMessageDialog(null, "tên nhân viên không được rỗng, phải đúng định dạng, không có số");
+			return;
+		}
 		KhachHang kh = new KhachHang(ma, ten, sdt, loai, ngaytao);
 		if (khachhangdao.timTheoSDT(sdt) != null) {
 			JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại trong hệ thống");
