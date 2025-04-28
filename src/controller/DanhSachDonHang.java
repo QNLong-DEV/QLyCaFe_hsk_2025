@@ -8,6 +8,14 @@ import model.DonHang;
 public class DanhSachDonHang {
 	private ArrayList<DonHang> list;
 
+	public ArrayList<DonHang> getList() {
+		return list;
+	}
+
+	public void setList(ArrayList<DonHang> list) {
+		this.list = list;
+	}
+
 	public DanhSachDonHang() {
 		list = new ArrayList<DonHang>();
 	}
@@ -30,7 +38,6 @@ public class DanhSachDonHang {
 		return false;
 	}
 
-	
 	public String xuat() {
 		String res = "";
 		for (DonHang x : list) {
