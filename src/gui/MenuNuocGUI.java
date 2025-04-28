@@ -106,19 +106,15 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		LookAndFeelConfig.applyLookAndFeel();
 
 		JPanel pnlNorth = new JPanel(new BorderLayout());
-		pnlNorth.setBackground(new Color(35, 85, 136));
 		lblTitle = new JLabel("Menu Nước", SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
-		lblTitle.setForeground(Color.white);
+
 		pnlNorth.add(lblTitle, BorderLayout.CENTER);
 		JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		lblTimNuoc = new JLabel("Tìm nước:");
-		lblTimNuoc.setForeground(Color.white);
 		txtTimNuoc = new JTextField(10);
 		pnlSearch.add(lblTimNuoc);
 		pnlSearch.add(txtTimNuoc);
-		pnlSearch.setForeground(Color.white);
-		pnlSearch.setBackground(new Color(35, 85, 136));
 		String[] loaiNuoc = { "Tất cả", "Trà sữa", "Cà phê", "Frosty", "Trà trái cây", "Trà xanh" };
 		cboLoaiNuoc = new JComboBox<>(loaiNuoc);
 		pnlSearch.add(cboLoaiNuoc);
@@ -131,7 +127,6 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		nvOn = NhanViendao.getNhanVienByMaNV(manv);
 
 		btnThanhToan = new JButton("Thanh toán");
-		btnHuy = new JButton("Hủy đơn hàng");
 		btnXoa = new JButton("Xóa món");
 		btnGiam = new JButton("Giảm số lượng");
 		btnTang = new JButton("Tăng số lượng");
@@ -139,7 +134,6 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 
 		Dimension btnSize = new Dimension(200, 50);
 		btnThanhToan.setMaximumSize(btnSize); // Cài đặt kích thước tối đa
-		btnHuy.setMaximumSize(btnSize);
 		btnXoa.setMaximumSize(btnSize);
 		btnGiam.setMaximumSize(btnSize);
 		btnTang.setMaximumSize(btnSize);
@@ -174,12 +168,9 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		this.add(splitPane, BorderLayout.CENTER);
 
 		pnlWest = new JPanel();
-		pnlWest.setBackground(new Color(35, 85, 136));
 		pnlWest.setLayout(new BoxLayout(pnlWest, BoxLayout.Y_AXIS));
 		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnThanhToan);
-		pnlWest.add(Box.createVerticalStrut(30));
-		pnlWest.add(btnHuy);
 		pnlWest.add(Box.createVerticalStrut(30));
 		pnlWest.add(btnXoa);
 		pnlWest.add(Box.createVerticalStrut(30));
@@ -192,15 +183,12 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		this.add(pnlWest, BorderLayout.WEST);
 
 		pnlSouth = new JPanel();
-		pnlSouth.setBackground(new Color(35, 85, 136));
 		lblTong = new JLabel("Tổng hóa đơn:");
 		lblTong.setFont(new Font("Arial", Font.BOLD, 30));
 		lblTong.setForeground(Color.white);
 		txtTong = new JTextField(50);
 		txtTong.setMaximumSize(new Dimension(150, 50));
 		txtTong.setEditable(false);
-		txtTong.setOpaque(false);
-		txtTong.setCaretColor(null);
 		pnlSouth.add(lblTong);
 		pnlSouth.add(txtTong);
 		add(pnlSouth, BorderLayout.SOUTH);
@@ -374,7 +362,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		pnlCardEast.add(Box.createVerticalStrut(5));
 		pnlCardEast.add(lblloaiCard);
 		pnlCard.add(pnlCardEast, BorderLayout.EAST);
-		pnlCard.add(btnChon,BorderLayout.SOUTH);
+		pnlCard.add(btnChon, BorderLayout.SOUTH);
 		return pnlCard;
 	}
 
@@ -400,7 +388,7 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 				if (thanhtoanWindow == null) {
 					thanhtoanWindow = new thanhToanGUI();
 				}
-				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn);
+				thanhtoanWindow.loadulieulenJFrameThanhToan(tblModel, listChiTietDonHang, nvOn, listNuoc);
 				thanhtoanWindow.visibleTrue();
 			}
 

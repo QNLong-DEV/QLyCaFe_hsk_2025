@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -27,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import controller.DanhSachChiTietDonHang;
 import controller.DanhSachDonHang;
 import controller.DanhSachKhachHang;
+import controller.DanhSachNuoc;
 import dao.ChiTietDonHangDAO;
 import dao.DonHangDAO;
 import dao.KhachHangDAO;
@@ -34,6 +36,7 @@ import model.ChiTietDonHang;
 import model.DonHang;
 import model.KhachHang;
 import model.NhanVien;
+import model.Nuoc;
 import util.LookAndFeelConfig;
 import util.MaDonHangGenerator;
 import util.MaKhachHangGenerator;
@@ -77,6 +80,7 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 	static KhachHangDAO khachhangdao = new KhachHangDAO();
 	static DonHangDAO donhangdao = new DonHangDAO();
 	static ChiTietDonHangDAO chitietdonhangdao = new ChiTietDonHangDAO();
+	static DanhSachNuoc listnc = new DanhSachNuoc();
 	static String maDH;
 	static KhachHang khON;
 	static NhanVien nvOn;
@@ -220,7 +224,9 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		setVisible(false);
 	}
 
-	public void loadulieulenJFrameThanhToan(DefaultTableModel tblmodel, DanhSachChiTietDonHang list, NhanVien nv) {
+	public void loadulieulenJFrameThanhToan(DefaultTableModel tblmodel, DanhSachChiTietDonHang list, NhanVien nv,
+			DanhSachNuoc listnc) {
+		thanhToanGUI.listnc = listnc;
 		tblModel.setRowCount(0);
 		listChiTietDonHang = null;
 		nvOn = null;
@@ -329,9 +335,14 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 
 		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
 		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
-			hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
-					.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
-					.append(chiTiet.getThanhTien()).append("Đ\n");
+			for (Nuoc nc : listnc.getList()) {
+				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
+					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Tên nước: ").append(nc.getTenNuoc())
+							.append(", Số Lượng: ").append(chiTiet.getSoLuong()).append(", Đơn Giá: ")
+							.append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ").append(chiTiet.getThanhTien())
+							.append("Đ\n");
+				}
+			}
 		}
 
 		hoaDon.append("\nTổng Tiền: ").append(listChiTietDonHang.tongTien(tenKHVangLai)).append("Đ\n");
@@ -352,9 +363,14 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 
 		hoaDon.append("\nChi Tiết Đơn Hàng:\n");
 		for (ChiTietDonHang chiTiet : listChiTietDonHang.getList()) {
-			hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(", Số Lượng: ").append(chiTiet.getSoLuong())
-					.append(", Đơn Giá: ").append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ")
-					.append(chiTiet.getThanhTien()).append("Đ\n");
+			for (Nuoc nc : listnc.getList()) {
+				if (chiTiet.getMaNuoc().equalsIgnoreCase(nc.getMaNuoc())) {
+					hoaDon.append("Mã Nước: ").append(chiTiet.getMaNuoc()).append(" ,Tên nước: ").append(nc.getTenNuoc())
+							.append(", Số Lượng: ").append(chiTiet.getSoLuong()).append(", Đơn Giá: ")
+							.append(chiTiet.getDonGia()).append("Đ, Thành Tiền: ").append(chiTiet.getThanhTien())
+							.append("Đ\n");
+				}
+			}
 		}
 
 		if (dh.getLoaiKH().equalsIgnoreCase("Tiềm năng")) {
@@ -382,7 +398,6 @@ public class thanhToanGUI extends JFrame implements ActionListener {
 		txtTong.setText("");
 		this.dispose();
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

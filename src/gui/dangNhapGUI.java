@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
@@ -47,7 +48,8 @@ public class dangNhapGUI extends JFrame {
 
 		LookAndFeelConfig.applyLookAndFeel();
 		lblDangNhap = new JLabel("Đăng nhập tài khoản");
-		lblDangNhap.setForeground(Color.blue);
+		lblDangNhap.setFont(new Font("Arial", Font.BOLD, 20));
+		lblDangNhap.setForeground(Color.WHITE);
 		lblDangNhap.setAlignmentX(CENTER_ALIGNMENT);
 		lblSdt = new JLabel("SĐT:");
 		lblMatKhau = new JLabel("Mật khẩu:");
