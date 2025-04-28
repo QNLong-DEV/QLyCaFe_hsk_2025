@@ -123,6 +123,10 @@ public class taoTaiKhoanKHGUI extends JDialog implements ActionListener {
 		LocalDateTime ngaytao = LocalDateTime.now();
 
 		KhachHang kh = new KhachHang(ma, ten, sdt, loai, ngaytao);
+		if (khachhangdao.timTheoSDT(sdt) != null) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại trong hệ thống");
+			return;
+		}
 		if (!khachhangdao.saveKH(kh)) {
 			JOptionPane.showMessageDialog(null, "Thêm hội viên không thành công");
 			return;

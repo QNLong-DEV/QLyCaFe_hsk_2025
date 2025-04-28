@@ -77,7 +77,12 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 		pnlCBoBestSeller.setMaximumSize(new Dimension(400, 500));
 
 		String[] tblBestSellerCol = { "Mã nước", "Tên nước", "Giá nước", "Loại nước", "Doanh số", "Tháng", "Năm" };
-		tblBestSellerModel = new DefaultTableModel(tblBestSellerCol, 0);
+		tblBestSellerModel = new DefaultTableModel(tblBestSellerCol, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // Tắt chỉnh sửa cho tất cả các ô
+			}
+		};
 		tblBestSeller = new JTable(tblBestSellerModel);
 		scrollPanelBestSeller = new JScrollPane(tblBestSeller);
 		tblBestSeller.setPreferredScrollableViewportSize(new Dimension(300, 200));
@@ -92,7 +97,12 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 		cboChart = new JComboBox<String>(cboChartItem);
 
 		String[] tblChartCol = { "Thời gian", "Doanh Thu", "Tổng số đơn" };
-		tblChartModel = new DefaultTableModel(tblChartCol, 0);
+		tblChartModel = new DefaultTableModel(tblChartCol, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // Tắt chỉnh sửa cho tất cả các ô
+			}
+		};
 		tblChart = new JTable(tblChartModel);
 		scrollPaneChart = new JScrollPane(tblChart);
 		tblChart.setPreferredScrollableViewportSize(new Dimension(300, 200));
@@ -114,7 +124,12 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 
 		String[] tblTongDonHangCol = { "Mã đơn hàng", "Mã khách hàng", "Mã nhân viên", "Loại khách hàng",
 				"Ngày mua hàng", "Tổng tiền" };
-		tblTongDonHangModel = new DefaultTableModel(tblTongDonHangCol, 0);
+		tblTongDonHangModel = new DefaultTableModel(tblTongDonHangCol, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // Tắt chỉnh sửa cho tất cả các ô
+			}
+		};
 		tblTongDonHang = new JTable(tblTongDonHangModel);
 		scrollPaneTongDonHang = new JScrollPane(tblTongDonHang);
 
