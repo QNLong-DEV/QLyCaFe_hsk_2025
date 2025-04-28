@@ -214,7 +214,6 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		pnlBtn.add(Box.createHorizontalStrut(20));
 		pnlBtn.add(btnSua);
 
-		
 		pnlLeft.add(BoxTT);
 		pnlLeft.add(Box.createVerticalStrut(20));
 		pnlLeft.add(Box0);
@@ -251,34 +250,37 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 		String ngaySinh = txtNgaySinhNV.getText();
 		String email = txtEmailNV.getText();
 
-		String ngaySinhRegex = "\\d{2}/\\d{2}/\\d{4}";
-		if ((ngaySinh == null) || !ngaySinh.matches(ngaySinhRegex)) {
-			JOptionPane.showMessageDialog(null, "Ngày sinh không được rỗng, phải đúng định dạng dd/mm/yyyy");
-			return;
-		}
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDate dateBorn = LocalDate.parse(ngaySinh, formatter);
-
 		String hoTenRegex = "^[\\p{L}\\p{M}\\s]+$";
 		if ((tennv == null) || !tennv.matches(hoTenRegex)) {
 			JOptionPane.showMessageDialog(null, "tên nhân viên không được rỗng, phải đúng định dạng, không có số");
+			txtTenNV.requestFocus();
 			return;
 		}
 
 		String sdtRegex = "0[3589]\\d{8}";
 		if ((sdt == null) || !sdt.matches(sdtRegex)) {
 			JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng, phải đúng định dạng");
+			txtSdtNV.requestFocus();
 			return;
 		}
 
 		String emailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
 		if ((email == null) || !email.matches(emailRegex)) {
 			JOptionPane.showMessageDialog(null, "Email không được rỗng, phải đúng định dạng");
+			txtEmailNV.requestFocus();
 			return;
 		}
 
-		
+		String ngaySinhRegex = "\\d{2}/\\d{2}/\\d{4}";
+		if ((ngaySinh == null) || !ngaySinh.matches(ngaySinhRegex)) {
+			JOptionPane.showMessageDialog(null, "Ngày sinh không được rỗng, phải đúng định dạng dd/mm/yyyy");
+			txtNgaySinhNV.requestFocus();
+			return;
+		}
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dateBorn = LocalDate.parse(ngaySinh, formatter);
+
 		NhanVien nvNew = new NhanVien(nvON.getMaNV(), tennv, sdt, dateBorn, email, nvON.getMatkhau());
 		if (!dao.suaNhanVienTheoMa(nvNew)) {
 			JOptionPane.showConfirmDialog(null, "Dữ liệu lỗi không thể sửa nhân viên");
@@ -289,11 +291,11 @@ public class crudNhanVien extends JPanel implements ActionListener, FocusListene
 	}
 
 	public void loadLaiThongTinNhanVien() {
-		lblMaNVshow.setText(nvON.getMaNV());
-		lblTenNVshow.setText(nvON.getTenNV());
-		lblNgaySinhNVshow.setText(nvON.getNgaysinh().toString());
-		lblSdtNVshow.setText(nvON.getSdt());
-		lblEmailNVshow.setText(nvON.getEmail());
+		lblMaNVshow.setText("Mã nhân viên: " + nvON.getMaNV());
+		lblTenNVshow.setText("Tên nhân viên: " + nvON.getTenNV());
+		lblNgaySinhNVshow.setText("Ngày sinh nhân viên: " + nvON.getNgaysinh().toString());
+		lblSdtNVshow.setText("SDT nhân viên: " + nvON.getSdt());
+		lblEmailNVshow.setText("Email nhân viên: " + nvON.getEmail());
 	}
 
 	public void xoaTrang() {

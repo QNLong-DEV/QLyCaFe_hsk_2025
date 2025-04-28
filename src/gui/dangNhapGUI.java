@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MediaTracker;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,6 +50,22 @@ public class dangNhapGUI extends JFrame {
 		setLocationRelativeTo(null);
 
 		LookAndFeelConfig.applyLookAndFeel();
+
+	
+
+		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/user.png"));
+		Image originalImage = originalIcon.getImage();
+
+	
+		Image scaledImage = originalImage.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+		JLabel lblImage = new JLabel(scaledIcon);
+
+		JPanel pnlWest = new JPanel();
+		pnlWest.add(lblImage);
+	
+
 		lblDangNhap = new JLabel("Đăng nhập tài khoản");
 		lblDangNhap.setFont(new Font("Arial", Font.BOLD, 20));
 		lblDangNhap.setForeground(Color.WHITE);
@@ -81,7 +100,7 @@ public class dangNhapGUI extends JFrame {
 		box2.add(lblMatKhau);
 		box2.add(Box.createHorizontalStrut(20));
 		box2.add(txtMatKhau);
-		
+
 		pnlCenter = new JPanel();
 		pnlCenter.add(box0);
 		pnlCenter.add(Box.createVerticalStrut(10));
@@ -91,7 +110,8 @@ public class dangNhapGUI extends JFrame {
 		pnlCenter.add(Box.createVerticalStrut(10));
 		pnlCenter.add(btnDangNhap);
 		pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
-		add(pnlCenter);
+		add(pnlCenter, BorderLayout.CENTER);
+		add(pnlWest, BorderLayout.WEST);
 		setVisible(true);
 	}
 
