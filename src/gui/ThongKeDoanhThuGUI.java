@@ -29,7 +29,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,9 +60,11 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 	private JSplitPane pnlTongDonHang;
 	private JPanel pnlTop;
 	static txtSource txtHelper = new txtSource();
-
 	private KhachHang khON;
+	private JSplitPane pnlBottom;
+	private JSplitPane allSplitPane;
 	private static ThongKeDoanhThuGUI instance;
+	DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	public static ThongKeDoanhThuGUI getInstance() {
 		return instance;
@@ -105,15 +109,13 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 		};
 		tblChart = new JTable(tblChartModel);
 		scrollPaneChart = new JScrollPane(tblChart);
-		tblChart.setPreferredScrollableViewportSize(new Dimension(300, 200));
+		tblChart.setPreferredScrollableViewportSize(new Dimension(1000, 200));
 
 		chartPanel = createChart();
 		chartPanel.setPreferredSize(new Dimension(300, 200));
 
 		pnlChartBD.add(chartPanel, BorderLayout.CENTER);
 		pnlChartBD.add(cboChart, BorderLayout.SOUTH);
-
-		pnlChart = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pnlChartBD, scrollPaneChart);
 
 		pnlBtnSdt = new JPanel();
 		txtSdt = new JTextField(20);
@@ -139,11 +141,15 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 		pnlTop = new JPanel();
 		pnlTop.setLayout(new BoxLayout(pnlTop, BoxLayout.X_AXIS));
 		pnlTop.add(pnlBestSeller);
-		pnlTop.add(pnlChart);
+		pnlTop.add(pnlTongDonHang);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		add(pnlTop);
-		add(pnlTongDonHang);
+		pnlBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnlChartBD, scrollPaneChart);
+		pnlBottom.setResizeWeight(0.5);
+
+		allSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pnlTop, pnlBottom);
+		allSplitPane.setResizeWeight(0.5);
+		this.add(allSplitPane);
 
 		cboChart.addActionListener(this);
 		cboBestSeller.addActionListener(this);
@@ -187,10 +193,12 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 
 		for (BaoCao baoCao : listbc) {
 			String time = baoCao.getThoiGian();
+			LocalDate date = LocalDate.parse(time);
+			String formattedDate = date.format(outputFormat);
 			double dThu = baoCao.getDoanhThu();
 			int tongDon = baoCao.getTongSoDon();
-			duLieuCot.addValue(dThu, "Doanh thu", time);
-			tblChartModel.addRow(new Object[] { time, dThu, tongDon });
+			duLieuCot.addValue(dThu, "Doanh thu", formattedDate);
+			tblChartModel.addRow(new Object[] { formattedDate, dThu, tongDon });
 		}
 
 		JFreeChart chart = ChartFactory.createBarChart(chartTitle, "Thời gian", "VNĐ", duLieuCot);
@@ -213,6 +221,11 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 	public void setThongKeTheoKhachHang() {
 		tblTongDonHangModel.setRowCount(0);
 		String sdt = txtSdt.getText();
+		String sdtRegex = "0[3589]\\d{8}";
+		if ((sdt == null) || !sdt.matches(sdtRegex)) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại không được rỗng, phải đúng định dạng");
+			return;
+		}
 		KhachHangDAO khdao = new KhachHangDAO();
 		khON = khdao.timTheoSDT(sdt);
 		if (khON != null) {
@@ -221,7 +234,7 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 			ds = dhdao.getDonHang(khON.getMaKH());
 			for (DonHang dh : ds.getList()) {
 				tblTongDonHangModel.addRow(new Object[] { dh.getMaDH(), dh.getMaKH(), dh.getMaNV(), dh.getLoaiKH(),
-						dh.getNgayDatHang(), dh.getTongTien() });
+						outputFormat.format(dh.getNgayDatHang()), dh.getTongTien() });
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng");

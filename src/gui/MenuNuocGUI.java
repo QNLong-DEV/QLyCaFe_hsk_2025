@@ -108,7 +108,8 @@ public class MenuNuocGUI extends JPanel implements ActionListener, DocumentListe
 		JPanel pnlNorth = new JPanel(new BorderLayout());
 		lblTitle = new JLabel("Menu Nước", SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 30));
-
+		lblTitle.setForeground(new Color(168, 80, 28));
+		
 		pnlNorth.add(lblTitle, BorderLayout.CENTER);
 		JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		lblTimNuoc = new JLabel("Tìm nước:");

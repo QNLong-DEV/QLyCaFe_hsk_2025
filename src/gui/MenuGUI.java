@@ -31,13 +31,9 @@ import model.NhanVien;
 import util.LookAndFeelConfig;
 
 public class MenuGUI extends JFrame implements ActionListener {
-	private JTabbedPane tabbedPane;
-	private JPanel pnlNhanVien;
-	private JPanel pnlDoanhThu;
 	private crudNhanVien nhanvienGUI;
 	private Dimension screenSize;
 	private MenuNuocGUI menunuocGUI;
-	private JPanel pnlKhachHang;
 	private ThongKeDoanhThuGUI thongkeGUI;
 	static NhanVienDAO dao = new NhanVienDAO();
 	private NhanVien nvON;
@@ -59,7 +55,6 @@ public class MenuGUI extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 
 		nvON = dao.getNhanVienByMaNV(manv);
-		tabbedPane = new JTabbedPane();
 
 		// NAV PANEL
 		navPanel = new JPanel();
@@ -86,14 +81,8 @@ public class MenuGUI extends JFrame implements ActionListener {
 		buttonPanel.setBackground(Color.decode("#6B4A24"));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-		menunuocGUI = new MenuNuocGUI(manv);
-		tabbedPane.addTab("Menu nước", menunuocGUI);
-
-		thongkeGUI = new ThongKeDoanhThuGUI();
-		tabbedPane.addTab("Doanh thu", thongkeGUI);
-
 		// Mảng tabs với tên của các tab
-		String[] tabs = { "Nhân viên", "Menu nước", "Doanh thu", "Khách hàng" };
+		String[] tabs = { "Nhân viên", "Menu nước", "Doanh thu"};
 		buttons = new JButton[tabs.length];
 
 		// Tạo các biểu tượng cho từng nút
@@ -101,7 +90,6 @@ public class MenuGUI extends JFrame implements ActionListener {
 		icons[0] = new ImageIcon(getClass().getResource("/img/staff.png"));
 		icons[1] = new ImageIcon(getClass().getResource("/img/menu.png"));
 		icons[2] = new ImageIcon(getClass().getResource("/img/stats.png"));
-		icons[3] = new ImageIcon(getClass().getResource("/img/service.png"));
 
 		for (int i = 0; i < icons.length; i++) {
 			Image img = icons[i].getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
@@ -139,9 +127,11 @@ public class MenuGUI extends JFrame implements ActionListener {
 
 		// CONTENT PANEL
 		contentPanel = new JPanel(new CardLayout());
-
+		
+		nhanvienGUI = new crudNhanVien(manv);
 		menunuocGUI = new MenuNuocGUI(manv);
 		thongkeGUI = new ThongKeDoanhThuGUI();
+		contentPanel.add(nhanvienGUI,"Nhân viên");
 		contentPanel.add(menunuocGUI, "Menu nước");
 		contentPanel.add(thongkeGUI, "Doanh thu");
 
