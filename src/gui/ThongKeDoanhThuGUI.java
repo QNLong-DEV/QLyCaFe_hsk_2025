@@ -193,12 +193,16 @@ public class ThongKeDoanhThuGUI extends JPanel implements ActionListener {
 
 		for (BaoCao baoCao : listbc) {
 			String time = baoCao.getThoiGian();
-			LocalDate date = LocalDate.parse(time);
-			String formattedDate = date.format(outputFormat);
 			double dThu = baoCao.getDoanhThu();
 			int tongDon = baoCao.getTongSoDon();
-			duLieuCot.addValue(dThu, "Doanh thu", formattedDate);
-			tblChartModel.addRow(new Object[] { formattedDate, dThu, tongDon });
+			if (itemselected.equalsIgnoreCase("Ngày")) {
+				LocalDate date = LocalDate.parse(time);
+				String formattedDate = date.format(outputFormat);
+				duLieuCot.addValue(dThu, "Doanh thu", time);
+				tblChartModel.addRow(new Object[] { formattedDate, dThu, tongDon });
+			}
+			duLieuCot.addValue(dThu, "Doanh thu", time);
+			tblChartModel.addRow(new Object[] { time, dThu, tongDon });
 		}
 
 		JFreeChart chart = ChartFactory.createBarChart(chartTitle, "Thời gian", "VNĐ", duLieuCot);
